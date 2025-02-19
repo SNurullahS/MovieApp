@@ -6,7 +6,7 @@ plugins {
 
 android {
     namespace = "com.nurullahsevinckan.movieapp"
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
         applicationId = "com.nurullahsevinckan.movieapp"

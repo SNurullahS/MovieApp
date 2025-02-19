@@ -1,4 +1,4 @@
-package com.nurullahsevinckan.movieapp.ui.theme
+package com.nurullahsevinckan.movieapp.presentation.ui.theme
 
 import androidx.compose.ui.graphics.Color
 

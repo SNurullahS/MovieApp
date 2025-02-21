@@ -1,5 +1,7 @@
 package com.nurullahsevinckan.movieapp.data.remote.datatransferobj
 
+import com.nurullahsevinckan.movieapp.domain.model.MovieDetail
+
 data class MovieDetailsDto(
     val Actors: String,
     val Awards: String,
@@ -27,3 +29,8 @@ data class MovieDetailsDto(
     val imdbRating: String,
     val imdbVotes: String
 )
+
+//To send usable data to domain layer
+fun MovieDetailsDto.toMovieDetail() : MovieDetail{
+    return MovieDetail(Actors,Awards,Country,Director,Genre,Language,Poster,Rated,Ratings,Released,Title,Type,Year,imdbRating)
+}

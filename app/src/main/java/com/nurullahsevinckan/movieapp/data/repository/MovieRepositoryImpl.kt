@@ -6,7 +6,7 @@ import com.nurullahsevinckan.movieapp.data.remote.datatransferobj.MovieDto
 import com.nurullahsevinckan.movieapp.domain.repository.MovieRepository
 import javax.inject.Inject
 
-class MovieRepository @Inject constructor(private val api : MovieAPI) : MovieRepository{
+class MovieRepositoryImpl @Inject constructor(private val api : MovieAPI) : MovieRepository{
     override suspend fun getMovies(search: String): MovieDto {
         return api.getMovies(searchString = search)
     }

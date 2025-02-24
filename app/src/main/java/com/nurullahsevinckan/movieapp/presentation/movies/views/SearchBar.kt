@@ -46,7 +46,7 @@ fun MovieSearchBar(
             shape = RoundedCornerShape(12.dp),
             colors = TextFieldDefaults.colors(Color.White),
             modifier = Modifier.fillMaxWidth()
-                .padding(20.dp)
+                .padding(horizontal = 20.dp)
                 .background(Color.White, CircleShape)
                 .shadow(5.dp, CircleShape)
                 .onFocusChanged {

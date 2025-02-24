@@ -49,13 +49,13 @@ fun MovieListRow(
                 overflow = TextOverflow.Ellipsis,
                 color = Color.White,
                 textAlign = TextAlign.Center)
-        }
 
-         Text(text = movie.Year,
-             style = MaterialTheme.typography.titleMedium,
-             overflow = TextOverflow.Ellipsis,
-             color = Color.White,
-             textAlign = TextAlign.Center)
-       }
-    }
+
+            Text(text = movie.Year,
+                style = MaterialTheme.typography.titleMedium,
+                overflow = TextOverflow.Ellipsis,
+                color = Color.White,
+                textAlign = TextAlign.Center)
+        }
+      }
 }

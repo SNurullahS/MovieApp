@@ -51,13 +51,14 @@ fun MovieSearchBar(
                 .shadow(5.dp, CircleShape)
                 .onFocusChanged {
                     isHintDisplayed = it.isFocused != true && text.isEmpty()
-                })
-
-            if(isHintDisplayed){
+                },
+            placeholder ={ if(isHintDisplayed){
                 Text(text = hint ?: "",
-                    color = Color.LightGray,
+                    color = Color.DarkGray,
                     modifier = Modifier.padding(horizontal = 12.dp, vertical = 12.dp))
-            }
+            } })
+
+
     }
 
 }

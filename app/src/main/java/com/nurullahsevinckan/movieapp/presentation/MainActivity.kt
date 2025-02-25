@@ -18,6 +18,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.nurullahsevinckan.movieapp.presentation.movies.views.MovieScreen
 import com.nurullahsevinckan.movieapp.presentation.ui.theme.MovieAppTheme
+import com.nurullahsevinckan.movieapp.util.Constants.IMDB_ID
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -40,7 +41,7 @@ class MainActivity : ComponentActivity() {
                         }
 
                         //Movie details screen
-                        composable(route = Screen.MovieDetailScreen.route){
+                        composable(route = Screen.MovieDetailScreen.route+"/${IMDB_ID}"){
 
 
                         }

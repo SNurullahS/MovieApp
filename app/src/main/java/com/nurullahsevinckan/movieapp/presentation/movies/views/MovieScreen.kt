@@ -15,6 +15,7 @@ import androidx.compose.ui.layout.ModifierLocalBeyondBoundsLayout
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import com.nurullahsevinckan.movieapp.presentation.Screen
 import com.nurullahsevinckan.movieapp.presentation.movies.MoviesEvent
 import com.nurullahsevinckan.movieapp.presentation.movies.MoviesViewModel
 
@@ -39,7 +40,7 @@ fun MovieScreen(
 
                items(state.movies){ movie ->
                    MovieListRow(movie = movie, onItemClick = {
-                    //navigation to other screen
+                    navController.navigate(Screen.MovieDetailScreen.route+"/${movie.imdbID}")
                    })
                }
             }

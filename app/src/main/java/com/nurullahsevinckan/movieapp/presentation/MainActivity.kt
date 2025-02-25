@@ -42,7 +42,7 @@ class MainActivity : ComponentActivity() {
                         }
 
                         //Movie details screen
-                        composable(route = Screen.MovieDetailScreen.route+"/${IMDB_ID}"){
+                        composable(route = Screen.MovieDetailScreen.route+"/{${IMDB_ID}}"){
                             MovieDetailScreen()
                         }
                     }

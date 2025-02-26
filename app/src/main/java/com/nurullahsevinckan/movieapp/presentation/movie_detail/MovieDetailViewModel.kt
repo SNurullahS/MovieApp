@@ -4,11 +4,13 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.nurullahsevinckan.movieapp.domain.use_case.get_movie_detail.GetMovieDetailUseCase
 import com.nurullahsevinckan.movieapp.util.Constants.IMDB_ID
 import com.nurullahsevinckan.movieapp.util.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import javax.inject.Inject
 
@@ -41,8 +43,9 @@ class MovieDetailViewModel @Inject constructor(
                 }
                 is Resource.Success ->{
                     _state.value = MovieDetailState(movie = it.data)
+                    //println("The movie title is : "+_state.value.movie?.Title)
                 }
             }
-        }
+        }.launchIn(viewModelScope)
     }
 }

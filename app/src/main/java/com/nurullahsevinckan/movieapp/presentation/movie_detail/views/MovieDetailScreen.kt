@@ -19,24 +19,21 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.nurullahsevinckan.movieapp.presentation.movie_detail.MovieDetailViewModel
+import kotlin.jvm.Throws
 
 @Composable
 fun MovieDetailScreen(
     movieDetailViewModel : MovieDetailViewModel = hiltViewModel()
 ){
     val state = movieDetailViewModel.state.value
-
     Box(modifier = Modifier.fillMaxSize()
         .background(Color.Black),
         contentAlignment = Alignment.Center){
-
         state.movie?.let {
             Column(verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally){
-
                 //Movie poster
                 ImageDetailComp(movie = it)
-
                 //Movie details
                 MovieDetailText(movie = it.Title)
                 MovieDetailText(movie = it.Country)

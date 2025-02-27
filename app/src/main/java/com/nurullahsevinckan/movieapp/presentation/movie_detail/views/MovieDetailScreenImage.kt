@@ -21,7 +21,7 @@ fun ImageDetailComp(movie: MovieDetail) {
             contentDescription = movie.Title,
             modifier = Modifier
                 .padding(16.dp)
-                .size(width = 300.dp, height = 300.dp)
+                .size(width = 500.dp, height = 500.dp)
                 .clip(RectangleShape)
         )
     }

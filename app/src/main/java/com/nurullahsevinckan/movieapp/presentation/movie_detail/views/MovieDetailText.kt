@@ -7,6 +7,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.nurullahsevinckan.movieapp.domain.model.MovieDetail
 
 
@@ -17,5 +18,6 @@ fun MovieDetailText(
     Text(text = movie,
         textAlign = TextAlign.Center,
         modifier = Modifier.padding(14.dp),
-        color = Color.White)
+        color = Color.White,
+        fontSize = 15.sp)
 }

@@ -23,7 +23,7 @@ object AppModule {
             .baseUrl(BASE_URL)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
-            .create(MovieAPI::class.java)
+            .create(MovieAPI::class.java    )
     }
 
 

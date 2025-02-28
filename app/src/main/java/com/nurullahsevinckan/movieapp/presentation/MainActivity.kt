@@ -29,12 +29,15 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             MovieAppTheme {
+                //if(user.oauth){status = true}
 
                 Surface(modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background){
 
                     val navController  = rememberNavController()
                     NavHost(navController = navController, startDestination = Screen.MovieScreen.route){
+
+                        //Login screen
 
                         //Movie screen
                         composable(route = Screen.MovieScreen.route){

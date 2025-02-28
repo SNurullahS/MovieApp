@@ -2,13 +2,16 @@ package com.nurullahsevinckan.movieapp.data.dependencyinjection
 
 import android.content.Context
 import androidx.room.Room
+import com.google.firebase.auth.FirebaseAuth
 import com.nurullahsevinckan.movieapp.data.local.dao.FavoriteMovieDao
 import com.nurullahsevinckan.movieapp.data.local.database.MovieDatabase
 import com.nurullahsevinckan.movieapp.data.remote.MovieAPI
 import com.nurullahsevinckan.movieapp.data.repository.FavoriteMovieRepositoryImpl
 import com.nurullahsevinckan.movieapp.data.repository.MovieRepositoryImpl
+import com.nurullahsevinckan.movieapp.domain.repository.AuthenticationRepository
 import com.nurullahsevinckan.movieapp.domain.repository.FavoriteMovieRepository
 import com.nurullahsevinckan.movieapp.domain.repository.MovieRepository
+import com.nurullahsevinckan.movieapp.domain.use_case.firebase_auth.AuthenticationRepositoryImpl
 import com.nurullahsevinckan.movieapp.util.Constants.BASE_URL
 import dagger.Module
 import dagger.Provides
@@ -60,4 +63,16 @@ object AppModule {
     fun provideFavoriteMovieRepository(dao: FavoriteMovieDao): FavoriteMovieRepository {
         return FavoriteMovieRepositoryImpl(dao)
     }
+
+
+    @Provides
+    @Singleton
+    fun providesFirebaseAuth() = FirebaseAuth.getInstance()
+
+    @Provides
+    @Singleton
+    fun providesAuthRepositoryImpl(firebaseAuth: FirebaseAuth): AuthenticationRepository {
+        return AuthenticationRepositoryImpl(firebaseAuth = firebaseAuth)
+    }
+
 }

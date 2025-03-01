@@ -10,10 +10,22 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.foundation.Image
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.*
 import androidx.compose.ui.res.painterResource
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavController
+import com.nurullahsevinckan.movieapp.presentation.login.LoginEvents
+import com.nurullahsevinckan.movieapp.presentation.login.LoginViewModel
 
 @Composable
-fun LoginScreen() {
+fun LoginScreen(
+    navController: NavController,
+    loginViewModel: LoginViewModel = hiltViewModel()
+) {
+    var email by remember { mutableStateOf("") }
+    var password by remember { mutableStateOf("") }
+
     Column(
         modifier = Modifier.fillMaxSize().padding(16.dp),
         verticalArrangement = Arrangement.Center,
@@ -32,21 +44,16 @@ fun LoginScreen() {
             modifier = Modifier.padding(bottom = 16.dp)
         )
 
-        CustomTextField(label = "Email")
-        CustomTextField(label = "Password", isPassword = true)
+        // Pass the state and state updater function
+        CustomTextField(label = "Email", text = email, onTextChange = { email = it })
+        CustomTextField(label = "Password", text = password, isPassword = true, onTextChange = { password = it })
 
         CustomButton(text = "Login") {
-            // Login
+            loginViewModel.onEvent(LoginEvents.Login(email,password))
         }
 
         CustomButton(text = "Sign Up") {
-            // Sign Up
+            loginViewModel.onEvent(LoginEvents.SignIn(email,password))
         }
     }
-}
-
-@Preview
-@Composable
-fun PreviewLoginScreen() {
-    LoginScreen()
 }

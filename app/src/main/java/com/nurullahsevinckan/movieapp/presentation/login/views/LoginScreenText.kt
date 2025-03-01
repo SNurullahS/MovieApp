@@ -10,14 +10,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
-
 @Composable
-fun CustomTextField(label: String, isPassword: Boolean = false) {
-    var text by remember { mutableStateOf("") }
-
+fun CustomTextField(label: String, text: String, onTextChange: (String) -> Unit, isPassword: Boolean = false) {
     OutlinedTextField(
         value = text,
-        onValueChange = { text = it },
+        onValueChange = onTextChange, // Pass the updated value back to LoginScreen
         label = { Text(label) },
         visualTransformation = if (isPassword) PasswordVisualTransformation() else VisualTransformation.None,
         modifier = Modifier.fillMaxWidth().padding(horizontal = 32.dp, vertical = 8.dp),

@@ -40,7 +40,7 @@ class MainActivity : ComponentActivity() {
 
                         //Login screen
                         composable(Screen.LoginScreen.route){
-                            LoginScreen()
+                            LoginScreen(navController)
                         }
 
                         //Movie screen

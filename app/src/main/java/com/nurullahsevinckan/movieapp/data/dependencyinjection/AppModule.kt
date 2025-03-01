@@ -54,6 +54,7 @@ object AppModule {
     }
 
     @Provides
+    @Singleton
     fun provideFavoriteMovieDao(database: MovieDatabase): FavoriteMovieDao {
         return database.favoriteMovieDao()
     }

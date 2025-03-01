@@ -16,9 +16,9 @@ class AuthenticationRepositoryImpl @Inject constructor(
 ) : AuthenticationRepository {
     override suspend fun loginUser(email: String, password: String): Flow<Resource<AuthResult>> {
         return flow {
-            emit(value = Resource.Loading())
+            emit(Resource.Loading())
             val result = firebaseAuth.signInWithEmailAndPassword(email, password).await()
-            emit(value = Resource.Success(data = result))
+            emit(Resource.Success(data = result))
         }.catch {
             emit(value = Resource.Error(it.message.toString()))
         }
@@ -26,12 +26,12 @@ class AuthenticationRepositoryImpl @Inject constructor(
 
     override suspend fun registerUser(email: String, password: String): Flow<Resource<AuthResult>> {
         return flow {
-            emit(value = Resource.Loading())
+            emit(Resource.Loading())
             val result = firebaseAuth.createUserWithEmailAndPassword(email, password).await()
             result.user?.sendEmailVerification()?.await()
-            emit(value = Resource.Success(data = result))
+            emit( Resource.Success(data = result))
         }.catch {
-            emit(value = Resource.Error(it.message.toString()))
+            emit(Resource.Error(it.message.toString()))
         }
     }
 
@@ -46,15 +46,15 @@ class AuthenticationRepositoryImpl @Inject constructor(
 
     override suspend fun signOut(): Flow<Resource<Unit>> {
         return flow {
-            emit(value = Resource.Loading())
+            emit(Resource.Loading())
             try {
                 firebaseAuth.signOut()
-                emit(value = Resource.Success(Unit))
+                emit(Resource.Success(Unit))
             } catch (e: Exception) {
-                emit(value = Resource.Error(e.localizedMessage ?: "An unexpected error occurred"))
+                emit(Resource.Error(e.localizedMessage ?: "An unexpected error occurred"))
             }
         }.catch {
-            emit(value = Resource.Error(it.message.toString()))
+            emit(Resource.Error(it.message ?: "Error while signOut!"))
         }
     }
 

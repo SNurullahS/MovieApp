@@ -14,6 +14,8 @@ import javax.inject.Inject
 class AuthenticationRepositoryImpl @Inject constructor(
     private val firebaseAuth: FirebaseAuth
 ) : AuthenticationRepository {
+
+
     override suspend fun loginUser(email: String, password: String): Flow<Resource<AuthResult>> {
         return flow {
             emit(Resource.Loading())

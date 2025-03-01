@@ -48,4 +48,6 @@ class MovieDetailViewModel @Inject constructor(
             }
         }.launchIn(viewModelScope)
     }
+
+
 }

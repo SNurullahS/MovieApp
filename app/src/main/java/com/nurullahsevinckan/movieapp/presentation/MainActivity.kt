@@ -16,6 +16,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.nurullahsevinckan.movieapp.presentation.login.views.LoginScreen
 import com.nurullahsevinckan.movieapp.presentation.movie_detail.views.MovieDetailScreen
 import com.nurullahsevinckan.movieapp.presentation.movies.views.MovieScreen
 import com.nurullahsevinckan.movieapp.presentation.ui.theme.MovieAppTheme
@@ -35,9 +36,12 @@ class MainActivity : ComponentActivity() {
                     color = MaterialTheme.colorScheme.background){
 
                     val navController  = rememberNavController()
-                    NavHost(navController = navController, startDestination = Screen.MovieScreen.route){
+                    NavHost(navController = navController, startDestination = Screen.LoginScreen.route){
 
                         //Login screen
+                        composable(Screen.LoginScreen.route){
+                            LoginScreen()
+                        }
 
                         //Movie screen
                         composable(route = Screen.MovieScreen.route){

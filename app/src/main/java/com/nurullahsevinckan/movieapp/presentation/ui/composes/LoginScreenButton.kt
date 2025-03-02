@@ -1,4 +1,4 @@
-package com.nurullahsevinckan.movieapp.presentation.login.views
+package com.nurullahsevinckan.movieapp.presentation.ui.composes
 
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding

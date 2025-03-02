@@ -11,13 +11,13 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ModifierLocalBeyondBoundsLayout
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.nurullahsevinckan.movieapp.presentation.Screen
 import com.nurullahsevinckan.movieapp.presentation.movies.MoviesEvent
 import com.nurullahsevinckan.movieapp.presentation.movies.MoviesViewModel
+import com.nurullahsevinckan.movieapp.presentation.ui.composes.MovieSearchBar
 
 @Composable
 fun MovieScreen(

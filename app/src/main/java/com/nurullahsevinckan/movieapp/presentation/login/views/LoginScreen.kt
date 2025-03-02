@@ -6,7 +6,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.foundation.Image
@@ -18,6 +17,7 @@ import androidx.navigation.NavController
 import com.nurullahsevinckan.movieapp.presentation.Screen
 import com.nurullahsevinckan.movieapp.presentation.login.LoginEvents
 import com.nurullahsevinckan.movieapp.presentation.login.LoginViewModel
+import com.nurullahsevinckan.movieapp.presentation.ui.composes.CustomButton
 
 @Composable
 fun LoginScreen(

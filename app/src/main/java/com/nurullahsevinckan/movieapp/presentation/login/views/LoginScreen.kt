@@ -50,10 +50,12 @@ fun LoginScreen(
 
         CustomButton(text = "Login") {
             loginViewModel.onEvent(LoginEvents.Login(email,password))
+            println("login buttonuna basıldı")
         }
 
         CustomButton(text = "Sign Up") {
             loginViewModel.onEvent(LoginEvents.SignIn(email,password))
+            println("sign up buttonuna basıldı")
         }
     }
 }

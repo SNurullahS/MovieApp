@@ -1,13 +1,16 @@
 package com.nurullahsevinckan.movieapp.domain.use_case.firebase_auth
 
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.nurullahsevinckan.movieapp.domain.repository.AuthenticationRepository
 import com.nurullahsevinckan.movieapp.util.Resource
+import dagger.hilt.android.scopes.ViewModelScoped
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 

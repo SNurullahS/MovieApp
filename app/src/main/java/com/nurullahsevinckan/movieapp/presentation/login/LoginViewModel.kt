@@ -5,6 +5,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.nurullahsevinckan.movieapp.domain.repository.AuthenticationRepository
+import com.nurullahsevinckan.movieapp.util.Constants.USER_UID
 import com.nurullahsevinckan.movieapp.util.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.launchIn
@@ -20,38 +21,54 @@ class LoginViewModel @Inject constructor(
     private val _state = mutableStateOf(LoginState())
     val state : MutableState<LoginState> = _state
 
-    //suspicious
-    private fun logIn(email : String, password : String) {
+
+    init {
+        if(auth.isUserAuthenticated()){
+
+        }
+    }
+
+
+    private fun logIn(email: String, password: String) {
         viewModelScope.launch {
-            auth.loginUser(email,password).onEach {
-                when(it){
+            auth.loginUser(email, password).collect {
+                when (it) {
                     is Resource.Error -> {
                         _state.value = LoginState(error = it.message)
+                        println("login error $email")
                     }
                     is Resource.Loading -> {
                         _state.value = LoginState(isLoading = true)
+                        println("login loading $email")
                     }
                     is Resource.Success -> {
                         _state.value = LoginState(user = it.data)
+                        println("login success $email")
+                        USER_UID = it.data?.user?.uid ?: "Unknown UID"
+                        println(USER_UID)
                     }
                 }
             }
         }
-
     }
+
 
     private fun register(email :String,password: String){
         viewModelScope.launch {
-            auth.registerUser(email,password).onEach {
+            auth.registerUser(email,password).collect {
                 when(it){
                     is Resource.Error -> {
                         _state.value = LoginState(error = it.message)
+                        println("register error${email}")
                     }
                     is Resource.Loading -> {
                         _state.value = LoginState(isLoading = true)
+                        println("register loading${email}")
                     }
                     is Resource.Success -> {
                         _state.value = LoginState(user = it.data)
+                        println("register ssuccesfull${email}")
+                        USER_UID = it.data?.user?.uid ?: "Unknown UID"
                     }
                 }
             }
@@ -99,19 +116,20 @@ class LoginViewModel @Inject constructor(
             val userUid = auth.getCurrentUser()?.uid.toString()
             return userUid
         }else{
-            return "Unknown UID"
+            return ""
         }
     }
 
     fun onEvent(event : LoginEvents){
         when(event) {
             is LoginEvents.Login ->{
-                logIn(event.email,event.password)
+               logIn(event.email,event.password)
                // println(_state.value)
             }
             is LoginEvents.SignIn ->{
-                register(event.email,event.password)
+                //register(event.email,event.password)
                // println(_state.value)
+                println(USER_UID)
             }
         }
     }

@@ -15,6 +15,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.res.painterResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import com.nurullahsevinckan.movieapp.presentation.Screen
 import com.nurullahsevinckan.movieapp.presentation.login.LoginEvents
 import com.nurullahsevinckan.movieapp.presentation.login.LoginViewModel
 
@@ -25,6 +26,15 @@ fun LoginScreen(
 ) {
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
+    val isUserLoggedIn by loginViewModel.isUserLoggedIn
+
+    LaunchedEffect(isUserLoggedIn) {
+        if (isUserLoggedIn) {
+            navController.navigate(Screen.MovieScreen.route) {
+                popUpTo(Screen.LoginScreen.route) { inclusive = true }
+            }
+        }
+    }
 
     Column(
         modifier = Modifier.fillMaxSize().padding(16.dp),
@@ -50,7 +60,6 @@ fun LoginScreen(
 
         CustomButton(text = "Login") {
             loginViewModel.onEvent(LoginEvents.Login(email,password))
-
             println("login buttonuna basıldı")
         }
 

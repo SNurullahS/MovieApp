@@ -5,6 +5,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.nurullahsevinckan.movieapp.domain.use_case.get_movie.GetMovieUseCase
+import com.nurullahsevinckan.movieapp.util.Constants.USER_UID
 import com.nurullahsevinckan.movieapp.util.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job

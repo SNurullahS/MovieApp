@@ -8,6 +8,7 @@ import com.nurullahsevinckan.movieapp.domain.repository.AuthenticationRepository
 import com.nurullahsevinckan.movieapp.util.Constants.USER_UID
 import com.nurullahsevinckan.movieapp.util.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
@@ -23,12 +24,32 @@ class LoginViewModel @Inject constructor(
 
 
     init {
-        if(auth.isUserAuthenticated()){
-
-        }
+        getUserUid()
+        println(USER_UID)
     }
 
-
+    private fun getUserUid(){
+        viewModelScope.launch {
+            auth.currentUserUid().collect{
+                when (it) {
+                    is Resource.Error -> {
+                        _state.value = LoginState(error = it.message)
+                        println("uid error")
+                    }
+                    is Resource.Loading -> {
+                        _state.value = LoginState(isLoading = true)
+                        println("uid loading!")
+                    }
+                    is Resource.Success -> {
+                        _state.value = LoginState(userUid = it.data)
+                        println("uid success")
+                        val uid = it.data ?: "null!"
+                        USER_UID = uid.take(5)
+                    }
+                }
+            }
+        }
+    }
     private fun logIn(email: String, password: String) {
         viewModelScope.launch {
             auth.loginUser(email, password).collect {
@@ -111,14 +132,6 @@ class LoginViewModel @Inject constructor(
         }
     }
 
-    private fun getCurrentUserUid() : String {
-        if (_state.value.user != null){
-            val userUid = auth.getCurrentUser()?.uid.toString()
-            return userUid
-        }else{
-            return ""
-        }
-    }
 
     fun onEvent(event : LoginEvents){
         when(event) {

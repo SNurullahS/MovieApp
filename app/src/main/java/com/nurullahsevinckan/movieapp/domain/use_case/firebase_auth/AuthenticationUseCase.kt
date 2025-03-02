@@ -7,6 +7,7 @@ import com.google.firebase.auth.FirebaseUser
 import com.nurullahsevinckan.movieapp.domain.repository.AuthenticationRepository
 import com.nurullahsevinckan.movieapp.util.Resource
 import dagger.hilt.android.scopes.ViewModelScoped
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
@@ -70,6 +71,17 @@ class AuthenticationRepositoryImpl @Inject constructor(
             emit(Resource.Success(currentUser.isEmailVerified))
         } else {
             emit(Resource.Error("User is not valid!"))
+        }
+    }
+
+    override fun currentUserUid(): Flow<Resource<String>> = flow {
+        emit(Resource.Loading())
+        val currentUser = firebaseAuth.currentUser
+        if(currentUser != null){
+        val currentUserUid = firebaseAuth.currentUser?.uid
+            emit(Resource.Success(currentUserUid!!))
+        }else{
+            emit(Resource.Error("User uid is not found!"))
         }
     }
 

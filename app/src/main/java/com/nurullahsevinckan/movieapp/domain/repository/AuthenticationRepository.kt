@@ -13,4 +13,5 @@ interface AuthenticationRepository {
     fun isUserAuthenticated(): Boolean
     suspend fun signOut(): Flow<Resource<Unit>>
     fun isEmailVerified(): Flow<Resource<Boolean>>
+    fun currentUserUid(): Flow<Resource<String>>
 }

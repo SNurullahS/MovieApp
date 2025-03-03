@@ -1,5 +1,6 @@
 package com.nurullahsevinckan.movieapp.presentation.login.views
 
+import android.widget.Toast
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -9,8 +10,10 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.foundation.Image
+import androidx.compose.material3.LocalContentColor
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.*
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
@@ -27,6 +30,9 @@ fun LoginScreen(
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     val isUserLoggedIn by loginViewModel.isUserLoggedIn
+    val toastMessage by loginViewModel.toastMessage
+    val context = LocalContext.current
+
 
     LaunchedEffect(isUserLoggedIn) {
         if (isUserLoggedIn) {
@@ -35,6 +41,14 @@ fun LoginScreen(
             }
         }
     }
+
+    LaunchedEffect(toastMessage) {
+        toastMessage?.let {
+            Toast.makeText(context, it, Toast.LENGTH_SHORT).show()
+            loginViewModel.clearToastMessage()
+        }
+    }
+
 
     Column(
         modifier = Modifier.fillMaxSize().padding(16.dp),
@@ -64,6 +78,7 @@ fun LoginScreen(
         }
 
         CustomButton(text = "Sign Up") {
+
             loginViewModel.onEvent(LoginEvents.SignIn(email,password))
             println("sign up buttonuna basıldı")
         }

@@ -1,5 +1,7 @@
 package com.nurullahsevinckan.movieapp.presentation.login
 
+import android.util.Patterns
+import android.widget.Toast
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
@@ -12,6 +14,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+import kotlin.jvm.Throws
 
 @HiltViewModel
 class LoginViewModel @Inject constructor(
@@ -23,6 +26,10 @@ class LoginViewModel @Inject constructor(
 
     private val _isUserLoggedIn = mutableStateOf(false)
     val isUserLoggedIn: State<Boolean> = _isUserLoggedIn
+
+    private val _toastMessage = mutableStateOf<String?>(null)
+    val toastMessage: State<String?> = _toastMessage
+
 
     init {
         getUserUid()
@@ -146,6 +153,22 @@ class LoginViewModel @Inject constructor(
         }
     }
 
+    private fun isValidEmail(email: String): Boolean {
+        return email.isNotEmpty() && Patterns.EMAIL_ADDRESS.matcher(email).matches()
+    }
+
+    private fun isValidPassword(password: String): Boolean {
+        val passwordPattern = Regex("^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@#\$%^&+=!]).{8,}\$")
+        return password.matches(passwordPattern)
+    }
+
+    private fun validateCredentials(email: String, password: String): Boolean {
+        return isValidEmail(email) && isValidPassword(password)
+    }
+
+    fun clearToastMessage() {
+        _toastMessage.value = null
+    }
 
     fun onEvent(event : LoginEvents){
         when(event) {
@@ -153,10 +176,12 @@ class LoginViewModel @Inject constructor(
                logIn(event.email,event.password)
                // println(_state.value)
             }
-            is LoginEvents.SignIn ->{
-                register(event.email,event.password)
-                // println(_state.value)
-                println(USER_UID)
+            is LoginEvents.SignIn -> {
+                if (validateCredentials(event.email, event.password)) {
+                    register(event.email, event.password)
+                } else {
+                    _toastMessage.value = "Invalid email or password!"
+                }
             }
         }
     }

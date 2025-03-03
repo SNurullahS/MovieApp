@@ -18,33 +18,44 @@ import com.nurullahsevinckan.movieapp.presentation.Screen
 import com.nurullahsevinckan.movieapp.presentation.movies.MoviesEvent
 import com.nurullahsevinckan.movieapp.presentation.movies.MoviesViewModel
 import com.nurullahsevinckan.movieapp.presentation.ui.composes.MovieSearchBar
+import androidx.compose.foundation.layout.*
+import androidx.compose.ui.Alignment
+import com.nurullahsevinckan.movieapp.presentation.ui.composes.OverflowMenu
 
 @Composable
 fun MovieScreen(
     navController: NavController,
-    viewModel : MoviesViewModel = hiltViewModel()
-){
+    viewModel: MoviesViewModel = hiltViewModel()
+) {
     val state = viewModel.state.value
 
-    Box(modifier = Modifier.fillMaxSize().background(Color.Black)){
+    Box(modifier = Modifier.fillMaxSize().background(Color.Black)) {
 
-        Column(){
-            MovieSearchBar(modifier = Modifier.fillMaxWidth()
-                .padding(20.dp),
-                hint = "Search...",
-                onSearch = {
-                    viewModel.onEvent(MoviesEvent.Search(it))
-                })
+        Column {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(20.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                MovieSearchBar(
+                    modifier = Modifier.weight(1f),
+                    hint = "Search...",
+                    onSearch = {
+                        viewModel.onEvent(MoviesEvent.Search(it))
+                    }
+                )
+
+                OverflowMenu(navController)
+            }
 
             LazyColumn(modifier = Modifier.fillMaxSize()) {
-
-               items(state.movies){ movie ->
-                   MovieListRow(movie = movie, onItemClick = {
-                    navController.navigate(Screen.MovieDetailScreen.route+"/${movie.imdbID}")
-                   })
-               }
+                items(state.movies) { movie ->
+                    MovieListRow(movie = movie, onItemClick = {
+                        navController.navigate(Screen.MovieDetailScreen.route + "/${movie.imdbID}")
+                    })
+                }
             }
         }
     }
-
 }

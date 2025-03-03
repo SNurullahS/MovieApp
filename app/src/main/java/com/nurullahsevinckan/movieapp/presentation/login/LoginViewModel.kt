@@ -34,9 +34,7 @@ class LoginViewModel @Inject constructor(
 
     init {
         getUserUid()
-        checkUserLoggedIn()
         println(_isUserLoggedIn.value)
-        signOut()
 
     }
 
@@ -63,6 +61,7 @@ class LoginViewModel @Inject constructor(
                         println("uid success")
                         val uid = it.data ?: "null!"
                         USER_UID = uid.take(5)
+                        println(USER_UID)
                     }
                 }
             }

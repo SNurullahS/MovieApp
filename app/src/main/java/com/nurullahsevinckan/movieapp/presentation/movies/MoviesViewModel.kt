@@ -6,12 +6,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.nurullahsevinckan.movieapp.domain.repository.AuthenticationRepository
 import com.nurullahsevinckan.movieapp.domain.use_case.get_movie.GetMovieUseCase
-import com.nurullahsevinckan.movieapp.presentation.login.LoginState
-import com.nurullahsevinckan.movieapp.util.Constants.USER_UID
 import com.nurullahsevinckan.movieapp.util.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
@@ -28,8 +25,8 @@ class MoviesViewModel @Inject constructor(
     private  val _state = mutableStateOf<MoviesState>(MoviesState())
     val state : State<MoviesState> = _state
 
-    private val _logoutState = mutableStateOf(MovieLogoutState())
-    val logoutState : State<MovieLogoutState> = _logoutState
+    private val _isUserLoggedOut = mutableStateOf(false)
+    val isUserLoggedOut: State<Boolean> = _isUserLoggedOut
 
     //If user decide to search new movie then previous jop ("Searching for movies") will be stopped
     private var  jop : Job? = null
@@ -58,19 +55,23 @@ class MoviesViewModel @Inject constructor(
         }.launchIn(viewModelScope)
     }
 
-    private fun signOut(){
+    fun logoutExecute() {
+        logout()
+    }
+
+    private fun logout(){
         viewModelScope.launch {
             auth.signOut().collect {
                 when(it){
                     is Resource.Error -> {
-                        _logoutState.value = MovieLogoutState(logoutError = it.message ?: "Logout error!")
+                        println(it.message)
                     }
                     is Resource.Loading -> {
-                        _logoutState.value = MovieLogoutState(logoutLoading = true)
+                        println("Movie logout loading is worked!")
                     }
                     is Resource.Success -> {
-                        _logoutState.value = MovieLogoutState(logout = true)
-                        println("Movie signOut work!")
+                        _isUserLoggedOut.value = true
+                        println("Movie logout work!")
                     }
                 }
             }

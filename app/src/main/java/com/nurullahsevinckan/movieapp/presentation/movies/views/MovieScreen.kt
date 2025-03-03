@@ -19,6 +19,8 @@ import com.nurullahsevinckan.movieapp.presentation.movies.MoviesEvent
 import com.nurullahsevinckan.movieapp.presentation.movies.MoviesViewModel
 import com.nurullahsevinckan.movieapp.presentation.ui.composes.MovieSearchBar
 import androidx.compose.foundation.layout.*
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import com.nurullahsevinckan.movieapp.presentation.ui.composes.OverflowMenu
 
@@ -28,6 +30,16 @@ fun MovieScreen(
     viewModel: MoviesViewModel = hiltViewModel()
 ) {
     val state = viewModel.state.value
+     val isLogout by viewModel.isUserLoggedOut
+
+
+   // LaunchedEffect(isLogout) {
+   //     if (isLogout) {
+   //         navController.navigate(Screen.LoginScreen.route) {
+   //             popUpTo(Screen.MovieScreen.route) { inclusive = true }
+   //         }
+   //     }
+   // }
 
     Box(modifier = Modifier.fillMaxSize().background(Color.Black)) {
 
@@ -46,7 +58,25 @@ fun MovieScreen(
                     }
                 )
 
-                OverflowMenu(navController)
+                OverflowMenu(
+                    navController,
+                    favList = {
+                        println("Go to fav list of movies")
+                    },
+                    logout = {
+                        println("Logged out")
+                        viewModel.logoutExecute()
+                    }
+                )
+
+                LaunchedEffect(viewModel.isUserLoggedOut.value) {
+                    if (viewModel.isUserLoggedOut.value) {
+                        navController.navigate(Screen.LoginScreen.route) {
+                            popUpTo(Screen.MovieScreen.route) { inclusive = true }
+                        }
+                    }
+                }
+
             }
 
             LazyColumn(modifier = Modifier.fillMaxSize()) {
@@ -59,3 +89,12 @@ fun MovieScreen(
         }
     }
 }
+
+
+//if (logoutState.isLoading) {
+//    CircularProgressIndicator()
+//}
+//
+//logoutState.errorMessage?.let { error ->
+//    Toast.makeText(context, error, Toast.LENGTH_SHORT).show()
+//}

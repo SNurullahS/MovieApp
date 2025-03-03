@@ -21,7 +21,10 @@ import androidx.compose.ui.graphics.Color
 import androidx.navigation.NavController
 
 @Composable
-fun OverflowMenu(navController: NavController) {
+fun OverflowMenu(navController: NavController,
+                 favList : () -> Unit,
+                 logout : () -> Unit){
+
     var expanded by remember { mutableStateOf(false) }
 
     Box(modifier = Modifier.wrapContentSize(Alignment.TopEnd)) {
@@ -38,14 +41,14 @@ fun OverflowMenu(navController: NavController) {
                 text = { Text("Favorites") },
                 onClick = {
                     expanded = false
-                    // navController.navigate(Screen.FavoritesScreen.route)
+                    favList()
                 }
             )
             DropdownMenuItem(
                 text = { Text("Sign Out") },
                 onClick = {
                     expanded = false
-                    // Sign-out işlemi burada çağırılabilir
+                    logout()
                     println("User Signed Out")
                 }
             )

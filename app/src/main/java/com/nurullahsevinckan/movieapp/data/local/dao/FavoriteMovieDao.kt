@@ -13,9 +13,12 @@ interface FavoriteMovieDao {
     @Delete
     suspend fun deleteFavoriteMovie(movie: FavoriteMovieEntity)
 
-    @Query("SELECT * FROM favorite_movies")
-    fun getAllFavoriteMovies(): Flow<List<FavoriteMovieEntity>>
+    @Query("SELECT * FROM favorite_movies WHERE userId = :userId")
+    fun getFavoriteMoviesByUser(userId: String): Flow<List<FavoriteMovieEntity>>
 
-    @Query("SELECT * FROM favorite_movies WHERE imdbID = :imdbID")
-    suspend fun getFavoriteMovieById(imdbID: String): FavoriteMovieEntity?
+    @Query("SELECT * FROM favorite_movies WHERE imdbID = :imdbID AND userId = :userId")
+    suspend fun getFavoriteMovieById(imdbID: String, userId: String): FavoriteMovieEntity?
+
+
+
 }

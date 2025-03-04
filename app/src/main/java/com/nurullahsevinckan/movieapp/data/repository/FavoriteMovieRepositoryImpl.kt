@@ -33,9 +33,9 @@ class FavoriteMovieRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun deleteFavoriteMovie(movie: FavoriteMovieEntity): Resource<Unit> {
+    override suspend fun deleteFavoriteMovie(imdbID: String, userId: String): Resource<Unit> {
         return try {
-            favoriteMovieDao.deleteFavoriteMovie(movie)
+            favoriteMovieDao.deleteFavoriteMovie(imdbID,userId)
             Resource.Success(Unit)
         } catch (e: Exception) {
             Resource.Error("Error during deleting movie!: ${e.message}")

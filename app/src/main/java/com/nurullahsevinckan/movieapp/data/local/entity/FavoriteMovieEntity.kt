@@ -9,8 +9,6 @@ data class FavoriteMovieEntity(
     val title: String,
     val year: String,
     val poster: String,
-    val genre: String,
-    val director: String,
     val imdbRating: String,
     val userId: String
 )

@@ -8,7 +8,7 @@ import javax.inject.Inject
 class RemoveFavoriteMovieUseCase @Inject constructor(
     private val repository: FavoriteMovieRepository
 ) {
-    suspend operator fun invoke(movie: FavoriteMovieEntity): Resource<Unit> {
-        return repository.deleteFavoriteMovie(movie)
+    suspend operator fun invoke(imdbID: String, userId: String): Resource<Unit> {
+        return repository.deleteFavoriteMovie(imdbID,userId)
     }
 }

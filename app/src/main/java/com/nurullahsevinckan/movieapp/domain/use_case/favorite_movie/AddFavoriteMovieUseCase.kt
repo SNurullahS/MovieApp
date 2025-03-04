@@ -8,6 +8,7 @@ import javax.inject.Inject
 class AddFavoriteMovieUseCase @Inject constructor(
     private val repository: FavoriteMovieRepository
 ) {
+    //User id is already in move. Can be deleted
     suspend operator fun invoke(movie: FavoriteMovieEntity, userId: String): Resource<Unit> {
         return if (repository.isMovieFavorite(movie.imdbID, userId)) {
             Resource.Error("That movie is already in favorite list!")

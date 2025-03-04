@@ -59,9 +59,6 @@ class LoginViewModel @Inject constructor(
                     is Resource.Success -> {
                         _state.value = LoginState(userUid = it.data)
                         println("uid success")
-                        val uid = it.data ?: "null!"
-                        USER_UID = uid.take(5)
-                        println(USER_UID)
                     }
                 }
             }
@@ -115,44 +112,43 @@ class LoginViewModel @Inject constructor(
         }
     }
 
-    private fun signOut(){
-        viewModelScope.launch {
-            auth.signOut().collect {
-                when(it){
-                    is Resource.Error -> {
-                        _state.value = LoginState(error = it.message)
-                    }
-                    is Resource.Loading -> {
-                        _state.value = LoginState(isLoading = true)
-                    }
-                    is Resource.Success -> {
-                        _state.value = LoginState(user = null)
-                        println("signOut work!")
-                        _isUserLoggedIn.value = false
-                    }
-                }
-            }
-        }
-    }
+   //private fun signOut(){
+   //    viewModelScope.launch {
+   //        auth.signOut().collect {
+   //            when(it){
+   //                is Resource.Error -> {
+   //                    _state.value = LoginState(error = it.message)
+   //                }
+   //                is Resource.Loading -> {
+   //                    _state.value = LoginState(isLoading = true)
+   //                }
+   //                is Resource.Success -> {
+   //                    _state.value = LoginState(user = null)
+   //                    println("signOut work!")
+   //                    _isUserLoggedIn.value = false
+   //                }
+   //            }
+   //        }
+   //    }
+   //}
 
-    private fun userVerified() {
-        viewModelScope.launch {
-            auth.isEmailVerified().onEach {
-                when(it){
-                    is Resource.Error -> {
-                        _state.value = LoginState(error = it.message)
-                    }
-                    is Resource.Loading -> {
-                        _state.value = LoginState(isLoading = true)
-                    }
-                    is Resource.Success -> {
-                        _state.value = LoginState(isUserVerified = it.data ?: false)
-                    }
-                }
-            }
-        }
-    }
-
+   // private fun userVerified() {
+   //     viewModelScope.launch {
+   //         auth.isEmailVerified().onEach {
+   //             when(it){
+   //                 is Resource.Error -> {
+   //                     _state.value = LoginState(error = it.message)
+   //                 }
+   //                 is Resource.Loading -> {
+   //                     _state.value = LoginState(isLoading = true)
+   //                 }
+   //                 is Resource.Success -> {
+   //                     _state.value = LoginState(isUserVerified = it.data ?: false)
+   //                 }
+   //             }
+   //         }
+   //     }
+   // }
     private fun isValidEmail(email: String): Boolean {
         return email.isNotEmpty() && Patterns.EMAIL_ADDRESS.matcher(email).matches()
     }

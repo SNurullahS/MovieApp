@@ -34,7 +34,7 @@ class LoginViewModel @Inject constructor(
 
     init {
         getUserUid()
-        println(_isUserLoggedIn.value)
+        checkUserLoggedIn()
 
     }
 

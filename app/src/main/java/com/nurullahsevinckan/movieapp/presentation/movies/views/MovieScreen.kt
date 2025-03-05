@@ -33,13 +33,13 @@ fun MovieScreen(
      val isLogout by viewModel.isUserLoggedOut
 
 
-   // LaunchedEffect(isLogout) {
-   //     if (isLogout) {
-   //         navController.navigate(Screen.LoginScreen.route) {
-   //             popUpTo(Screen.MovieScreen.route) { inclusive = true }
-   //         }
-   //     }
-   // }
+    LaunchedEffect(isLogout) {
+        if (isLogout) {
+            navController.navigate(Screen.LoginScreen.route) {
+                popUpTo(Screen.MovieScreen.route) { inclusive = true }
+            }
+        }
+    }
 
     Box(modifier = Modifier.fillMaxSize().background(Color.Black)) {
 
@@ -88,13 +88,7 @@ fun MovieScreen(
             }
         }
     }
+
+
 }
 
-
-//if (logoutState.isLoading) {
-//    CircularProgressIndicator()
-//}
-//
-//logoutState.errorMessage?.let { error ->
-//    Toast.makeText(context, error, Toast.LENGTH_SHORT).show()
-//}

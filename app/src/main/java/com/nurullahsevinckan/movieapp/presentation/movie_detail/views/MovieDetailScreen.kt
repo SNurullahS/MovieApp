@@ -68,8 +68,6 @@ fun MovieDetailScreen(
                 MovieDetailText(movie = movie.Director)
                 MovieDetailText(movie = movie.imdbRating)
             }
-
-               // Sağ üst köşeye favori butonu ekleme
            // IconButton(
            //     onClick = {
            //         if (favoriteState.value) {

@@ -11,4 +11,20 @@ import com.nurullahsevinckan.movieapp.data.local.entity.FavoriteMovieEntity
 abstract class MovieDatabase : RoomDatabase() {
     abstract fun favoriteMovieDao(): FavoriteMovieDao
 
+    companion object {
+        @Volatile
+        private var INSTANCE: MovieDatabase? = null
+
+        fun getInstance(context: Context): MovieDatabase {
+            return INSTANCE ?: synchronized(this) {
+                val instance = Room.databaseBuilder(
+                    context.applicationContext,
+                    MovieDatabase::class.java,
+                    "movie_database"
+                ).build()
+                INSTANCE = instance
+                instance
+            }
+        }
+    }
 }

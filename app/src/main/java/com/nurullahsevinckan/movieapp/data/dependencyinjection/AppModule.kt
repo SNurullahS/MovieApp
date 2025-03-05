@@ -43,15 +43,15 @@ object AppModule {
         return MovieRepositoryImpl(api)
     }
 
-    @Provides
-    @Singleton
-    fun provideMovieDatabase(@ApplicationContext context: Context): MovieDatabase {
-        return Room.databaseBuilder(
-            context,
-            MovieDatabase::class.java,
-            "movie_database"
-        ).build()
-    }
+ @Provides
+ @Singleton
+ fun provideMovieDatabase(@ApplicationContext context: Context): MovieDatabase {
+     return Room.databaseBuilder(
+         context,
+         MovieDatabase::class.java,
+         "movie_database"
+     ).build()
+ }
 
     @Provides
     @Singleton
@@ -64,7 +64,6 @@ object AppModule {
     fun provideFavoriteMovieRepository(dao: FavoriteMovieDao): FavoriteMovieRepository {
         return FavoriteMovieRepositoryImpl(dao)
     }
-
 
     @Provides
     @Singleton

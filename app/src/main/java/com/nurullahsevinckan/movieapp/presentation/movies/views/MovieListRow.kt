@@ -5,7 +5,9 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.MaterialTheme
@@ -32,13 +34,12 @@ fun MovieListRow(
         .clickable {
             onItemClick(movie)
         }
-        .padding(10.dp),
-        horizontalArrangement =Arrangement.SpaceBetween) {
+        .padding(1.dp)) {
 
         Image(painter = rememberAsyncImagePainter(model = movie.Poster),
             contentDescription = movie.Title,
-            modifier = Modifier.padding(16.dp)
-                .size(200.dp,200.dp)
+            modifier = Modifier //.padding(16.dp)
+                .size(200.dp,200.dp) // it should be dynamic
                 .clip(RectangleShape))
 
         Column (modifier = Modifier.align(Alignment.CenterVertically),
@@ -58,4 +59,6 @@ fun MovieListRow(
                 textAlign = TextAlign.Center)
         }
       }
+
+    Spacer(modifier = Modifier.height(35.dp))
 }

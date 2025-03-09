@@ -30,8 +30,7 @@ fun MovieScreen(
     viewModel: MoviesViewModel = hiltViewModel()
 ) {
     val state = viewModel.state.value
-     val isLogout by viewModel.isUserLoggedOut
-
+    val isLogout by viewModel.isUserLoggedOut
 
     LaunchedEffect(isLogout) {
         if (isLogout) {
@@ -41,23 +40,35 @@ fun MovieScreen(
         }
     }
 
-    Box(modifier = Modifier.fillMaxSize().background(Color.Black)) {
-
-        Column {
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(Color.Black)
+            // for avoid camera space
+            .statusBarsPadding()
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(horizontal = 16.dp)
+        ) {
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(20.dp),
+                    .padding(vertical = 8.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
+                // Search bar
                 MovieSearchBar(
-                    modifier = Modifier.weight(1f),
+                    modifier = Modifier
+                        .weight(1f),
                     hint = "Search...",
                     onSearch = {
                         viewModel.onEvent(MoviesEvent.Search(it))
                     }
                 )
 
+                //logout nad fav list
                 OverflowMenu(
                     navController,
                     favList = {
@@ -68,27 +79,25 @@ fun MovieScreen(
                         viewModel.logoutExecute()
                     }
                 )
-
-                LaunchedEffect(viewModel.isUserLoggedOut.value) {
-                    if (viewModel.isUserLoggedOut.value) {
-                        navController.navigate(Screen.LoginScreen.route) {
-                            popUpTo(Screen.MovieScreen.route) { inclusive = true }
-                        }
-                    }
-                }
-
             }
 
-            LazyColumn(modifier = Modifier.fillMaxSize()) {
+            Spacer(modifier = Modifier.height(16.dp))
+
+            LazyColumn(
+                modifier = Modifier
+                    .fillMaxSize()
+            ) {
                 items(state.movies) { movie ->
-                    MovieListRow(movie = movie, onItemClick = {
-                        navController.navigate(Screen.MovieDetailScreen.route + "/${movie.imdbID}")
-                    })
+                    MovieListRow(
+                        movie = movie,
+                        onItemClick = {
+                            navController.navigate(
+                                Screen.MovieDetailScreen.route + "/${movie.imdbID}"
+                            )
+                        }
+                    )
                 }
             }
         }
     }
-
-
 }
-

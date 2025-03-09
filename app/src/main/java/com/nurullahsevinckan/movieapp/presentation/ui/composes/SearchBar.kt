@@ -3,6 +3,7 @@ package com.nurullahsevinckan.movieapp.presentation.ui.composes
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.shape.CircleShape
@@ -27,59 +28,48 @@ import androidx.compose.ui.unit.dp
 
 @Composable
 fun MovieSearchBar(
-    modifier: Modifier,
-    hint: String?,
+    modifier: Modifier = Modifier,
+    hint: String? = "",
     onSearch: (String) -> Unit = {}
 ) {
     var text by remember { mutableStateOf("") }
     var isHintDisplayed by remember { mutableStateOf(hint != "") }
 
-    Box(
-        modifier = modifier
-            .statusBarsPadding() // Durum çubuğu (status bar) yüksekliğine göre padding ekler.
-    ) {
-        TextField(
-            value = text,
-            onValueChange = {
-                text = it
-            },
-            leadingIcon = {
-                Icon(
-                    imageVector = Icons.Default.Search,
-                    contentDescription = "Search icon",
-                    tint = Color.Gray
+    TextField(
+        value = text,
+        onValueChange = {
+            text = it
+        },
+        leadingIcon = {
+            Icon(
+                imageVector = Icons.Default.Search,
+                contentDescription = "Search Icon",
+                tint = Color.Gray
+            )
+        },
+        placeholder = {
+            if (isHintDisplayed) {
+                Text(
+                    text = hint ?: "",
+                    color = Color.Gray
                 )
-            },
-            keyboardActions = KeyboardActions(onDone = {
-                onSearch(text)
-            }),
-            maxLines = 1,
-            singleLine = true,
-            textStyle = TextStyle(color = Color.Black),
-            shape = RoundedCornerShape(12.dp),
-            colors = TextFieldDefaults.colors(
-                Color.White,
-                focusedIndicatorColor = Color.Transparent,
-                unfocusedIndicatorColor = Color.Transparent,
-                disabledIndicatorColor = Color.Transparent
-            ),
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 12.dp)
-                .background(Color.White, CircleShape)
-                .shadow(5.dp, CircleShape)
-                .onFocusChanged {
-                    isHintDisplayed = it.isFocused != true && text.isEmpty()
-                },
-            placeholder = {
-                if (isHintDisplayed) {
-                    Text(
-                        text = hint ?: "",
-                        color = Color.DarkGray,
-                        modifier = Modifier.padding(horizontal = 12.dp, vertical = 12.dp)
-                    )
-                }
             }
-        )
-    }
+        },
+        singleLine = true,
+        maxLines = 1,
+        textStyle = TextStyle(color = Color.Black),
+        shape = RoundedCornerShape(24.dp),
+        colors = TextFieldDefaults.colors(
+            Color.White,
+            focusedIndicatorColor = Color.Transparent,
+            unfocusedIndicatorColor = Color.Transparent,
+            disabledIndicatorColor = Color.Transparent
+        ),
+        keyboardActions = KeyboardActions(onDone = { onSearch(text) }),
+        modifier = modifier
+            .height(48.dp)
+            .onFocusChanged {
+                isHintDisplayed = it.isFocused != true && text.isEmpty()
+            }
+    )
 }

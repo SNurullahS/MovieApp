@@ -111,7 +111,8 @@ fun MovieDetailScreen(
             )
         }
 
-       // if (state.isLoading) {
+       // i
+    // ,0f (state.isLoading) {
        //     CircularProgressIndicator(modifier = Modifier.align(Center))
        // }
     }

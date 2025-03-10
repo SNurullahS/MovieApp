@@ -1,14 +1,18 @@
 package com.nurullahsevinckan.movieapp.presentation.movies
 
+import android.widget.Toast
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.nurullahsevinckan.movieapp.domain.repository.AuthenticationRepository
 import com.nurullahsevinckan.movieapp.domain.use_case.get_movie.GetMovieUseCase
 import com.nurullahsevinckan.movieapp.util.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
@@ -27,6 +31,10 @@ class MoviesViewModel @Inject constructor(
 
     private val _isUserLoggedOut = mutableStateOf(false)
     val isUserLoggedOut: State<Boolean> = _isUserLoggedOut
+
+   // private val _isSearchStringEmpty = mutableStateOf(false)
+   // val isSearchStringEmpty : State<Boolean> = _isSearchStringEmpty
+
 
     //If user decide to search new movie then previous jop ("Searching for movies") will be stopped
     private var  jop : Job? = null
@@ -82,8 +90,11 @@ class MoviesViewModel @Inject constructor(
     fun onEvent(event : MoviesEvent){
         when(event) {
             is MoviesEvent.Search -> {
-                getMovies(event.searchString)
+                if(event.searchString.isNotEmpty())
+                {
+                    getMovies(event.searchString)
+                }
+                }
             }
         }
-    }
 }

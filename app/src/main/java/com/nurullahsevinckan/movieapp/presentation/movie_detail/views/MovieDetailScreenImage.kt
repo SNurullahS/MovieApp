@@ -28,7 +28,7 @@ fun ImageDetailComp(movie: MovieDetail) {
             modifier = Modifier
                 .padding(16.dp)
                 .fillMaxWidth()   // Ekranın genişliğini doldurur
-                .aspectRatio(0.75f)  // Yükseklik, genişliğin 1 katı olur
+                .aspectRatio(0.75f)  // Yükseklikligin genislige oranı
                 .clip(RectangleShape)
         )
     }

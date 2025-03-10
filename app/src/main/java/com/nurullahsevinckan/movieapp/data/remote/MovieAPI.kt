@@ -10,6 +10,7 @@ interface MovieAPI {
 
     // http://www.omdbapi.com/?i=tt3896198&apikey=557e8fca -> "i" is imdb id
     // http://www.omdbapi.com/?s=batman&apikey=557e8fca -> "s" is search string
+    // http://www.omdbapi.com/?s=batman&apikey=557e8fca&page=30 -> "page" is page number of result
 
     @GET(".")
     suspend fun getMovies(

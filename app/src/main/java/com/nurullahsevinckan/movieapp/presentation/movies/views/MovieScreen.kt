@@ -1,5 +1,6 @@
 package com.nurullahsevinckan.movieapp.presentation.movies.views
 
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -20,8 +21,10 @@ import com.nurullahsevinckan.movieapp.presentation.movies.MoviesViewModel
 import com.nurullahsevinckan.movieapp.presentation.ui.composes.MovieSearchBar
 import androidx.compose.foundation.layout.*
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.platform.LocalContext
 import com.nurullahsevinckan.movieapp.presentation.ui.composes.OverflowMenu
 
 @Composable
@@ -31,6 +34,12 @@ fun MovieScreen(
 ) {
     val state = viewModel.state.value
     val isLogout by viewModel.isUserLoggedOut
+
+    val context = LocalContext.current
+
+    val emptySearchStringMessage  = "Search space can not be empty!"
+
+
 
     LaunchedEffect(isLogout) {
         if (isLogout) {
@@ -64,7 +73,8 @@ fun MovieScreen(
                         .weight(1f),
                     hint = "Search...",
                     onSearch = {
-                        viewModel.onEvent(MoviesEvent.Search(it))
+                        if (it.isNotEmpty()){viewModel.onEvent(MoviesEvent.Search(it))}
+                        else{Toast.makeText(context, emptySearchStringMessage, Toast.LENGTH_SHORT).show()}
                     }
                 )
 

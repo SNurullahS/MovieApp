@@ -13,6 +13,8 @@ activityCompose = "1.10.0"
 composeBom = "2024.04.01"
 loggingInterceptor = "5.0.0-alpha.11"
 okhttp = "5.0.0-alpha.14"
+pagingCompose = "3.3.6"
+pagingRuntime = "3.3.6"
 retrofit = "2.9.0"
 roomCompiler = "2.6.1"
 roomKtx = "2.6.1"
@@ -30,6 +32,8 @@ androidx-hilt-work = { module = "androidx.hilt:hilt-work", version = "1.2.0" }
 androidx-lifecycle-viewmodel-compose = { module = "androidx.lifecycle:lifecycle-viewmodel-compose" }
 androidx-lifecycle-viewmodel-ktx = { module = "androidx.lifecycle:lifecycle-viewmodel-ktx", version = "2.8.7" }
 androidx-navigation-compose = { module = "androidx.navigation:navigation-compose", version = "2.9.0-alpha06" }
+androidx-paging-compose = { module = "androidx.paging:paging-compose", version.ref = "pagingCompose" }
+androidx-paging-runtime = { module = "androidx.paging:paging-runtime", version.ref = "pagingRuntime" }
 androidx-room-compiler = { module = "androidx.room:room-compiler", version.ref = "roomCompiler" }
 androidx-room-ktx = { module = "androidx.room:room-ktx", version.ref = "roomKtx" }
 androidx-room-runtime = { module = "androidx.room:room-runtime", version.ref = "roomRuntime" }

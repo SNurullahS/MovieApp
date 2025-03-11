@@ -23,6 +23,8 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
@@ -30,6 +32,7 @@ import com.nurullahsevinckan.movieapp.presentation.ui.composes.OverflowMenu
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
+import com.nurullahsevinckan.movieapp.presentation.ui.composes.MovieScreenUpButton
 
 @Composable
 fun MovieScreen(
@@ -40,11 +43,19 @@ fun MovieScreen(
     val isLogout by viewModel.isUserLoggedOut
     val listState = rememberLazyListState()
 
+    // Show scroll to top button only when not at the top
+    val showScrollToTop by remember {
+        derivedStateOf {
+            listState.firstVisibleItemIndex > 0
+        }
+    }
+
     val context = LocalContext.current
     val emptySearchStringMessage = "Search space can not be empty!"
+    val visibleItemInfo = listState.layoutInfo.visibleItemsInfo
 
     // Check if we need to load more movies
-    LaunchedEffect(listState.layoutInfo.visibleItemsInfo, state.movies.size) {
+    LaunchedEffect(visibleItemInfo, state.movies.size) {
         val lastVisibleItem = listState.layoutInfo.visibleItemsInfo.lastOrNull()
         if (lastVisibleItem != null) {
             val lastIndex = lastVisibleItem.index
@@ -155,6 +166,16 @@ fun MovieScreen(
                             .fillMaxWidth()
                             .padding(horizontal = 20.dp)
                             .align(Alignment.Center)
+                    )
+                }
+                
+                // Scroll to top FAB
+                if (showScrollToTop) {
+                    MovieScreenUpButton(
+                        modifier = Modifier
+                            .align(Alignment.BottomEnd)
+                            .padding(8.dp),
+                        listState = listState
                     )
                 }
             }

@@ -13,21 +13,35 @@
 
     class GetMovieUseCase @Inject constructor(private val repository : MovieRepository)  {
 
-            fun executeGetMovieRepository(search: String) : Flow<Resource<List<Movie>>> = flow {
+            fun executeGetMovieRepository(search: String, page: Int = 1) : Flow<Resource<List<Movie>>> = flow {
                 try {
                     emit(Resource.Loading())
-                    val movieList = repository.getMovies(search)
+                    val movieList = repository.getMovies(search, page)
                     if (movieList.Response.equals("True")) {
-                        emit(Resource.Success(movieList.toMovieList()))
-                    }else
-                    {
+                        emit(Resource.Success(movieList.toMovieList(), movieList.totalResults.toIntOrNull() ?: 0))
+                    } else {
                         emit(Resource.Error("No movie found!"))
                     }
-                }catch (e : IOError){
+                } catch (e : IOError) {
                     emit(Resource.Error(e.localizedMessage ?: "No internet connection!"))
-                }catch (e : HttpException){
+                } catch (e : HttpException) {
                     emit(Resource.Error(e.localizedMessage ?: "No internet connection!"))
                 }
             }
 
+            fun loadMoreMovies(search: String, page: Int) : Flow<Resource<List<Movie>>> = flow {
+                try {
+                    emit(Resource.Loading())
+                    val movieList = repository.getMovies(search, page)
+                    if (movieList.Response.equals("True")) {
+                        emit(Resource.Success(movieList.toMovieList(), movieList.totalResults.toIntOrNull() ?: 0))
+                    } else {
+                        emit(Resource.Error("No more movies found!"))
+                    }
+                } catch (e : IOError) {
+                    emit(Resource.Error(e.localizedMessage ?: "No internet connection!"))
+                } catch (e : HttpException) {
+                    emit(Resource.Error(e.localizedMessage ?: "No internet connection!"))
+                }
+            }
     }

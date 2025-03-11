@@ -25,7 +25,11 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.style.TextAlign
 import com.nurullahsevinckan.movieapp.presentation.ui.composes.OverflowMenu
+import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.Text
 
 @Composable
 fun MovieScreen(
@@ -34,12 +38,24 @@ fun MovieScreen(
 ) {
     val state = viewModel.state.value
     val isLogout by viewModel.isUserLoggedOut
+    val listState = rememberLazyListState()
 
     val context = LocalContext.current
+    val emptySearchStringMessage = "Search space can not be empty!"
 
-    val emptySearchStringMessage  = "Search space can not be empty!"
-
-
+    // Check if we need to load more movies
+    LaunchedEffect(listState.layoutInfo.visibleItemsInfo, state.movies.size) {
+        val lastVisibleItem = listState.layoutInfo.visibleItemsInfo.lastOrNull()
+        if (lastVisibleItem != null) {
+            val lastIndex = lastVisibleItem.index
+            val totalItems = state.movies.size
+            
+            // If we're close to the end of the list and not already loading more
+            if (lastIndex >= totalItems - 3 && !state.isLoading && !state.isLoadingMore && !state.endReached) {
+                viewModel.onEvent(MoviesEvent.LoadMore)
+            }
+        }
+    }
 
     LaunchedEffect(isLogout) {
         if (isLogout) {
@@ -93,18 +109,52 @@ fun MovieScreen(
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            LazyColumn(
-                modifier = Modifier
-                    .fillMaxSize()
-            ) {
-                items(state.movies) { movie ->
-                    MovieListRow(
-                        movie = movie,
-                        onItemClick = {
-                            navController.navigate(
-                                Screen.MovieDetailScreen.route + "/${movie.imdbID}"
-                            )
+            Box(modifier = Modifier.fillMaxSize()) {
+                LazyColumn(
+                    modifier = Modifier.fillMaxSize(),
+                    state = listState
+                ) {
+                    items(state.movies) { movie ->
+                        MovieListRow(
+                            movie = movie,
+                            onItemClick = {
+                                navController.navigate(
+                                    Screen.MovieDetailScreen.route + "/${movie.imdbID}"
+                                )
+                            }
+                        )
+                    }
+                    
+                    item {
+                        if (state.isLoadingMore) {
+                            Box(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(16.dp),
+                                contentAlignment = Alignment.Center
+                            ) {
+                                CircularProgressIndicator(color = Color.White)
+                            }
                         }
+                    }
+                }
+                
+                if (state.isLoading) {
+                    CircularProgressIndicator(
+                        modifier = Modifier.align(Alignment.Center),
+                        color = Color.White
+                    )
+                }
+                
+                if (state.error.isNotEmpty() && state.movies.isEmpty()) {
+                    Text(
+                        text = state.error,
+                        color = Color.Red,
+                        textAlign = TextAlign.Center,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 20.dp)
+                            .align(Alignment.Center)
                     )
                 }
             }

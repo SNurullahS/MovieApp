@@ -37,7 +37,8 @@ class MoviesViewModel @Inject constructor(
 
 
     //If user decide to search new movie then previous jop ("Searching for movies") will be stopped
-    private var  jop : Job? = null
+    private var job : Job? = null
+    private var loadMoreJob: Job? = null
 
     //When viewModel launch then default search string "Spider man" will be searched
     init{
@@ -45,21 +46,87 @@ class MoviesViewModel @Inject constructor(
     }
 
     private fun getMovies(search : String){
-        jop?.cancel()
+        job?.cancel()
+        loadMoreJob?.cancel()
 
-        jop = getMovieUseCase.executeGetMovieRepository(search).onEach {
+        _state.value = _state.value.copy(
+            isLoading = true,
+            currentPage = 1,
+            movies = emptyList(),
+            endReached = false
+        )
+
+        job = getMovieUseCase.executeGetMovieRepository(search, 1).onEach {
             when(it){
                 is Resource.Error -> {
-                    _state.value = MoviesState(error = it.message ?: "Error!")
+                    _state.value = _state.value.copy(
+                        isLoading = false,
+                        error = it.message ?: "Error!"
+                    )
                 }
                 is Resource.Loading -> {
-                    _state.value = MoviesState(isLoading = true)
+                    _state.value = _state.value.copy(
+                        isLoading = true
+                    )
                 }
                 is Resource.Success -> {
-                    _state.value = MoviesState(movies = it.data ?: emptyList())
+                    val totalResults = it.totalResults
+                    val endReached = it.data?.size ?: 0 >= totalResults || it.data?.isEmpty() == true
+                    
+                    _state.value = _state.value.copy(
+                        isLoading = false,
+                        movies = it.data ?: emptyList(),
+                        totalResults = totalResults,
+                        endReached = endReached,
+                        search = search
+                    )
                 }
             }
+        }.launchIn(viewModelScope)
+    }
 
+    private fun loadMoreMovies() {
+        if (_state.value.isLoading || _state.value.isLoadingMore || _state.value.endReached) {
+            return
+        }
+
+        loadMoreJob?.cancel()
+
+        val nextPage = _state.value.currentPage + 1
+        
+        _state.value = _state.value.copy(
+            isLoadingMore = true
+        )
+
+        loadMoreJob = getMovieUseCase.loadMoreMovies(_state.value.search, nextPage).onEach { result ->
+            when(result) {
+                is Resource.Error -> {
+                    _state.value = _state.value.copy(
+                        isLoadingMore = false,
+                        error = result.message ?: "Error loading more movies"
+                    )
+                }
+                is Resource.Loading -> {
+                    _state.value = _state.value.copy(
+                        isLoadingMore = true
+                    )
+                }
+                is Resource.Success -> {
+                    val currentMovies = _state.value.movies
+                    val newMovies = result.data ?: emptyList()
+                    val totalResults = result.totalResults
+                    val combinedMovies = currentMovies + newMovies
+                    val endReached = combinedMovies.size >= totalResults || newMovies.isEmpty()
+                    
+                    _state.value = _state.value.copy(
+                        isLoadingMore = false,
+                        movies = combinedMovies,
+                        currentPage = nextPage,
+                        totalResults = totalResults,
+                        endReached = endReached
+                    )
+                }
+            }
         }.launchIn(viewModelScope)
     }
 
@@ -86,15 +153,16 @@ class MoviesViewModel @Inject constructor(
         }
     }
 
-
     fun onEvent(event : MoviesEvent){
         when(event) {
             is MoviesEvent.Search -> {
-                if(event.searchString.isNotEmpty())
-                {
+                if(event.searchString.isNotEmpty()) {
                     getMovies(event.searchString)
                 }
-                }
+            }
+            is MoviesEvent.LoadMore -> {
+                loadMoreMovies()
             }
         }
+    }
 }

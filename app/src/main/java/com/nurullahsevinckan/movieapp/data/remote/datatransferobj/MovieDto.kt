@@ -12,3 +12,12 @@ data class MovieDto(
 fun MovieDto.toMovieList() : List<Movie>{
     return Search.map { search -> Movie(search.Poster,search.Title,search.Year,search.imdbID) }
 }
+
+// Extension function to safely convert String to Int
+fun String.toIntOrNull(): Int? {
+    return try {
+        this.toInt()
+    } catch (e: NumberFormatException) {
+        null
+    }
+}

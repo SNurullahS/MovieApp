@@ -51,8 +51,9 @@ class MovieDetailViewModel @Inject constructor(
                         _state.value = MovieDetailState(isLoading = true)
                     }
                     is Resource.Success -> {
-                        _state.value = _state.value.copy(movie = result.data)
+                        _state.value = _state.value.copy(movie = result.data, isLoading = false)
                       //  checkIfMovieIsFavorite(imdbId, USER_UID) // Detay yüklendiğinde favori mi kontrol et
+
                     }
                 }
             }.launchIn(viewModelScope)

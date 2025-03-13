@@ -1,18 +1,15 @@
 package com.nurullahsevinckan.movieapp.presentation.movie_detail.views
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import coil.compose.rememberAsyncImagePainter
@@ -25,14 +22,14 @@ fun ImageDetailComp(movie: MovieDetail, isPortrait: Boolean, screenWidth: Dp) {
     Image(
         painter = rememberAsyncImagePainter(model = movie.Poster),
         contentDescription = movie.Title,
-        contentScale = ContentScale.Fit, // Oranı koruyarak en iyi boyutta göster
+        contentScale = ContentScale.Fit, // Keep the scale
         modifier = Modifier
             .padding(16.dp)
             .then(
                 if (isPortrait) {
-                    Modifier.fillMaxWidth().aspectRatio(0.75f) // Dikeyde tam genişlik
+                    Modifier.fillMaxWidth().aspectRatio(0.75f) // vertical full weight
                 } else {
-                    Modifier.size(screenWidth * 0.6f) // Yatayda %60 genişlikte olacak
+                    Modifier.size(screenWidth * 0.6f) // Horizontal  %60 weight
                 }
             )
             .clip(RectangleShape)
@@ -52,14 +49,14 @@ fun ImageDetailComp(movie: MovieDetail) {
     Image(
         painter = rememberAsyncImagePainter(model = movie.Poster),
         contentDescription = movie.Title,
-        contentScale = ContentScale.Fit, // Oranı koruyarak en iyi boyutta göster
+        contentScale = ContentScale.Fit,
         modifier = Modifier
             .padding(16.dp)
             .then(
                 if (isPortrait) {
-                    Modifier.fillMaxWidth().aspectRatio(0.75f) // Dikeyde tam genişlik
+                    Modifier.fillMaxWidth().aspectRatio(0.75f)
                 } else {
-                    Modifier.size(screenWidth * 0.6f) // Yatayda %60 genişlikte olacak
+                    Modifier.size(screenWidth * 0.6f)
                 }
             )
             .clip(RectangleShape)
@@ -78,11 +75,11 @@ fun ImageDetailComp(movie: MovieDetail) {
         Image(
             painter = rememberAsyncImagePainter(model = movie.Poster),
             contentDescription = movie.Title,
-            contentScale = ContentScale.Crop, // Resmin alanı doldururken oranı korur
+            contentScale = ContentScale.Crop,
             modifier = Modifier
                 .padding(16.dp)
-                .fillMaxWidth()   // Ekranın genişliğini doldurur
-                .aspectRatio(0.75f)  // Yükseklikligin genislige oranı
+                .fillMaxWidth()
+                .aspectRatio(0.75f)
                 .clip(RectangleShape)
         )
     }

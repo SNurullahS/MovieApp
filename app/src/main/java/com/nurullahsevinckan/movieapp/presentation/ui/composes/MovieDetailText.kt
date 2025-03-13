@@ -1,4 +1,4 @@
-package com.nurullahsevinckan.movieapp.presentation.movie_detail.views
+package com.nurullahsevinckan.movieapp.presentation.ui.composes
 
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Text
@@ -8,7 +8,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.nurullahsevinckan.movieapp.domain.model.MovieDetail
 
 
 @Composable

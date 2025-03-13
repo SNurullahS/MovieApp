@@ -8,6 +8,9 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.statusBarsPadding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.outlined.FavoriteBorder
@@ -33,6 +36,7 @@ import com.nurullahsevinckan.movieapp.presentation.movie_detail.MovieDetailEvent
 import com.nurullahsevinckan.movieapp.presentation.movie_detail.MovieDetailViewModel
 import com.nurullahsevinckan.movieapp.util.Constants.IMDB_ID
 import com.nurullahsevinckan.movieapp.util.Constants.USER_UID
+import com.nurullahsevinckan.movieapp.util.ScreenUtil
 import kotlin.jvm.Throws
 
 
@@ -41,6 +45,11 @@ fun MovieDetailScreen(
     movieDetailViewModel: MovieDetailViewModel = hiltViewModel()
 ) {
     val state = movieDetailViewModel.state.value
+    val isPortrait = ScreenUtil.isPortrait()
+    val screenWidth = ScreenUtil.getScreenWidth()
+    val screenHeight = ScreenUtil.getScreenHeight()
+
+    println("$$isPortrait + $screenWidth + $screenHeight")
 
 
   // LaunchedEffect(state.movieImdb) {
@@ -54,24 +63,36 @@ fun MovieDetailScreen(
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color.Black),
-        contentAlignment = Alignment.Center
+            .background(Color.Black)
+            .statusBarsPadding(),
+            contentAlignment = Center
     ) {
         state.movie?.let { movie ->
+            if(isPortrait)
             Column(
                 verticalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.CenterHorizontally
+                horizontalAlignment = Alignment.CenterHorizontally,
+                modifier = Modifier
+                    .fillMaxSize()
+                    .verticalScroll(rememberScrollState())
             ) {
+                //Poster
+                ImageDetailComp(movie = movie,isPortrait,screenWidth)
 
-                ImageDetailComp(movie = movie)
-
-
-                MovieDetailText(movie = movie.Title)
-                MovieDetailText(movie = movie.Country)
-                MovieDetailText(movie = movie.Director)
-                MovieDetailText(movie = movie.imdbRating)
+                //Movie detail
+                Column(
+                    verticalArrangement = Arrangement.Center,
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    modifier = Modifier
+                        .weight(1f)
+                        .padding(16.dp)
+                ) {
+                    MovieDetailText(movie.Title)
+                    MovieDetailText(movie.Country)
+                    MovieDetailText(movie.Director)
+                    MovieDetailText(movie.imdbRating)
+                }
             }
-
 
             IconButton(
                 onClick = {
@@ -111,9 +132,8 @@ fun MovieDetailScreen(
             )
         }
 
-       // i
-    // ,0f (state.isLoading) {
-       //     CircularProgressIndicator(modifier = Modifier.align(Center))
-       // }
+       if (state.isLoading) {
+            CircularProgressIndicator(modifier = Modifier.align(Center))
+        }
     }
 }

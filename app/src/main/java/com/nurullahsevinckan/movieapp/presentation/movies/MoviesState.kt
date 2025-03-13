@@ -1,6 +1,5 @@
 package com.nurullahsevinckan.movieapp.presentation.movies
 
-import com.nurullahsevinckan.movieapp.data.remote.datatransferobj.Search
 import com.nurullahsevinckan.movieapp.domain.model.Movie
 
 data class MoviesState (

@@ -12,9 +12,63 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import coil.compose.rememberAsyncImagePainter
 import com.nurullahsevinckan.movieapp.domain.model.MovieDetail
+
+
+@Composable
+fun ImageDetailComp(movie: MovieDetail, isPortrait: Boolean, screenWidth: Dp) {
+
+    Image(
+        painter = rememberAsyncImagePainter(model = movie.Poster),
+        contentDescription = movie.Title,
+        contentScale = ContentScale.Fit, // Oranı koruyarak en iyi boyutta göster
+        modifier = Modifier
+            .padding(16.dp)
+            .then(
+                if (isPortrait) {
+                    Modifier.fillMaxWidth().aspectRatio(0.75f) // Dikeyde tam genişlik
+                } else {
+                    Modifier.size(screenWidth * 0.6f) // Yatayda %60 genişlikte olacak
+                }
+            )
+            .clip(RectangleShape)
+    )
+}
+
+
+//V0.2
+/*
+@Composable
+fun ImageDetailComp(movie: MovieDetail) {
+    val configuration = LocalConfiguration.current
+    val screenWidth = configuration.screenWidthDp.dp
+    val screenHeight = configuration.screenHeightDp.dp
+    val isPortrait = screenWidth < screenHeight
+
+    Image(
+        painter = rememberAsyncImagePainter(model = movie.Poster),
+        contentDescription = movie.Title,
+        contentScale = ContentScale.Fit, // Oranı koruyarak en iyi boyutta göster
+        modifier = Modifier
+            .padding(16.dp)
+            .then(
+                if (isPortrait) {
+                    Modifier.fillMaxWidth().aspectRatio(0.75f) // Dikeyde tam genişlik
+                } else {
+                    Modifier.size(screenWidth * 0.6f) // Yatayda %60 genişlikte olacak
+                }
+            )
+            .clip(RectangleShape)
+    )
+}
+ */
+
+//V0.1
+/*
 @Composable
 fun ImageDetailComp(movie: MovieDetail) {
     Column(
@@ -33,3 +87,4 @@ fun ImageDetailComp(movie: MovieDetail) {
         )
     }
 }
+ */

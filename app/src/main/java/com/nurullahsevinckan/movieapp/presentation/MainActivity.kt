@@ -28,7 +28,6 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             MovieAppTheme {
-
                 Surface(modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background){
                     val navController  = rememberNavController()

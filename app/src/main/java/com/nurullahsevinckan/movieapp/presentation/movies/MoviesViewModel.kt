@@ -71,12 +71,13 @@ class MoviesViewModel @Inject constructor(
                 }
                 is Resource.Success -> {
                     val totalResults = it.totalResults
-                    val endReached = it.data?.size ?: 0 >= totalResults || it.data?.isEmpty() == true
+                    val endReached =
+                        (it.data?.size ?: 0) >= totalResults!! || it.data?.isEmpty() == true
                     
                     _state.value = _state.value.copy(
                         isLoading = false,
                         movies = it.data ?: emptyList(),
-                        totalResults = totalResults,
+                        totalResults = totalResults ?: 0,
                         endReached = endReached,
                         search = search
                     )
@@ -116,7 +117,7 @@ class MoviesViewModel @Inject constructor(
                     val newMovies = result.data ?: emptyList()
                     val totalResults = result.totalResults
                     val combinedMovies = currentMovies + newMovies
-                    val endReached = combinedMovies.size >= totalResults || newMovies.isEmpty()
+                    val endReached = combinedMovies.size >= totalResults!! || newMovies.isEmpty()
                     
                     _state.value = _state.value.copy(
                         isLoadingMore = false,

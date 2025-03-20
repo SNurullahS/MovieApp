@@ -13,7 +13,6 @@ import javax.inject.Inject
 class GetMovieDetailUseCase @Inject constructor(private val repository: MovieRepository) {
 
     fun executeGetMovieDetail(imdbId : String) : Flow<Resource<MovieDetail>>  = flow {
-
         try {
             emit(Resource.Loading())
             val movieDetail = repository.getMovieDetail(imdbId)

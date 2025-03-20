@@ -13,11 +13,18 @@ fun BottomNavBar(
 ) {
     val items by viewModel.bottomNavItems.collectAsState()
 
+    var selectedItemIndex by remember {
+        mutableIntStateOf(0)
+    }
+
+
     NavigationBar {
-        items.forEach { item ->
+        items.forEachIndexed { index, item ->
             NavigationBarItem(
-                selected = navController.currentDestination?.route == item.route,
+                selected = selectedItemIndex == index,
                 onClick = {
+                    if (selectedItemIndex != index) selectedItemIndex = index
+                    /*
                     if (navController.currentDestination?.route != item.route) {
                         navController.navigate(item.route) {
                             popUpTo(navController.graph.startDestinationId) { saveState = true }
@@ -25,6 +32,7 @@ fun BottomNavBar(
                             restoreState = true
                         }
                     }
+                     */
                 },
                 label = { Text(item.title) },
                 icon = {
@@ -40,15 +48,20 @@ fun BottomNavBar(
 
                         }
                     ) {
-                    Icon(
-                        imageVector = if (navController.currentDestination?.route == item.route) {
-                            item.selectedIcon
-                        } else {
-                            item.unselectedIcon
-                        },
-                        contentDescription = item.title
-                    )
-                }}
+                        Icon(
+                            imageVector =
+                            if (index == selectedItemIndex) {
+                                item.selectedIcon
+                            } else item.unselectedIcon,
+                            //if (navController.currentDestination?.route == item.route) {
+                            //    item.selectedIcon
+                            //} else {
+                            //    item.unselectedIcon
+                            //}
+                            contentDescription = item.title
+                        )
+                    }
+                }
             )
         }
     }

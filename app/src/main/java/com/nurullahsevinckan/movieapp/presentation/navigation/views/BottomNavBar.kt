@@ -1,7 +1,11 @@
 package com.nurullahsevinckan.movieapp.presentation.navigation.views
 
+import androidx.compose.foundation.layout.size
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.nurullahsevinckan.movieapp.presentation.navigation.BottomNavViewModel
@@ -18,7 +22,9 @@ fun BottomNavBar(
     }
 
 
-    NavigationBar {
+    NavigationBar(
+        containerColor = Color.Black
+    ) {
         items.forEachIndexed { index, item ->
             NavigationBarItem(
                 selected = selectedItemIndex == index,
@@ -34,7 +40,13 @@ fun BottomNavBar(
                     }
                      */
                 },
-                label = { Text(item.title) },
+                label = {
+                    Text(
+                        item.title,
+                        color = Color.White,
+                        style = MaterialTheme.typography.bodyMedium,
+                    )
+                },
                 icon = {
                     BadgedBox(
                         badge = {
@@ -58,7 +70,10 @@ fun BottomNavBar(
                             //} else {
                             //    item.unselectedIcon
                             //}
-                            contentDescription = item.title
+                            contentDescription = item.title,
+                            tint = Color.LightGray,
+                            modifier = Modifier.size(24.dp)
+
                         )
                     }
                 }

@@ -16,7 +16,8 @@ interface MovieAPI {
     suspend fun getMovies(
         @Query("s") searchString: String,
         @Query("apikey") apiKey :String = API_KEY,
-        @Query("page") page: Int = 1
+        @Query("page") page: Int = 1,
+        @Query("type") type : String? = null
     ) : MovieDto
 
     @GET(".")

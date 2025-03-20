@@ -13,10 +13,10 @@
 
     class GetMovieUseCase @Inject constructor(private val repository : MovieRepository)  {
 
-            fun executeGetMovieRepository(search: String, page: Int = 1) : Flow<Resource<List<Movie>>> = flow {
+            fun executeGetMovieRepository(search: String, page: Int = 1, type : String? = null) : Flow<Resource<List<Movie>>> = flow {
                 try {
                     emit(Resource.Loading())
-                    val movieList = repository.getMovies(search, page)
+                    val movieList = repository.getMovies(search, page ,type)
                     if (movieList.Response.equals("True")) {
                         emit(Resource.Success(movieList.toMovieList(), movieList.totalResults.toIntOrNull() ?: 0))
                     } else {
@@ -32,7 +32,7 @@
             fun loadMoreMovies(search: String, page: Int) : Flow<Resource<List<Movie>>> = flow {
                 try {
                     emit(Resource.Loading())
-                    val movieList = repository.getMovies(search, page)
+                    val movieList = repository.getMovies(search, page, type = null )
                     if (movieList.Response.equals("True")) {
                         emit(Resource.Success(movieList.toMovieList(), movieList.totalResults.toIntOrNull() ?: 0))
                     } else {

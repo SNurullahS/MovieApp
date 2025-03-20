@@ -15,14 +15,20 @@ class BottomNavViewModel : ViewModel() {
     private val _bottomNavItems = MutableStateFlow(
         listOf(
             BottomNavItem(
-                title = "Movies",
+                title = "Home",
                 route = Screen.MovieScreen.route,
                 selectedIcon = Icons.Filled.Home,
                 unselectedIcon = Icons.Outlined.Home
             ),
             BottomNavItem(
-                title = "Settings",
-                route = "settings_screen",
+                title = "Movies",
+                route = "movies_screen",
+                selectedIcon = Icons.Filled.Settings,
+                unselectedIcon = Icons.Outlined.Settings
+            ),
+            BottomNavItem(
+                title = "Series",
+                route = "series_screen",
                 selectedIcon = Icons.Filled.Settings,
                 unselectedIcon = Icons.Outlined.Settings
             )

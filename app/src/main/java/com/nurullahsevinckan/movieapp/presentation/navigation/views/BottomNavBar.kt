@@ -1,5 +1,6 @@
 package com.nurullahsevinckan.movieapp.presentation.navigation.views
 
+import android.util.Log
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -13,14 +14,16 @@ import com.nurullahsevinckan.movieapp.presentation.navigation.BottomNavViewModel
 @Composable
 fun BottomNavBar(
     navController: NavController,
-    viewModel: BottomNavViewModel = hiltViewModel()
+    viewModel: BottomNavViewModel
 ) {
     val items by viewModel.bottomNavItems.collectAsState()
+    val selectedItemIndex by viewModel.selectedItemIndex.collectAsState()
 
-    var selectedItemIndex by remember {
-        mutableIntStateOf(0)
+    // Set initial selected item
+    LaunchedEffect(Unit) {
+        Log.d("BottomNavBar", "Initial setup - setting index to 0")
+        viewModel.setSelectedIndex(0)
     }
-
 
     NavigationBar(
         containerColor = Color.Black
@@ -29,16 +32,8 @@ fun BottomNavBar(
             NavigationBarItem(
                 selected = selectedItemIndex == index,
                 onClick = {
-                    if (selectedItemIndex != index) selectedItemIndex = index
-                    /*
-                    if (navController.currentDestination?.route != item.route) {
-                        navController.navigate(item.route) {
-                            popUpTo(navController.graph.startDestinationId) { saveState = true }
-                            launchSingleTop = true
-                            restoreState = true
-                        }
-                    }
-                     */
+                    Log.d("BottomNavBar", "Item clicked: ${item.title} (index: $index)")
+                    viewModel.setSelectedIndex(index)
                 },
                 label = {
                     Text(
@@ -65,15 +60,9 @@ fun BottomNavBar(
                             if (index == selectedItemIndex) {
                                 item.selectedIcon
                             } else item.unselectedIcon,
-                            //if (navController.currentDestination?.route == item.route) {
-                            //    item.selectedIcon
-                            //} else {
-                            //    item.unselectedIcon
-                            //}
                             contentDescription = item.title,
                             tint = Color.LightGray,
                             modifier = Modifier.size(24.dp)
-
                         )
                     }
                 }

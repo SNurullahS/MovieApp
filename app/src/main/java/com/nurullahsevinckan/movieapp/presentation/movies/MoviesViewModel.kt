@@ -12,7 +12,9 @@ import com.nurullahsevinckan.movieapp.util.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
@@ -31,10 +33,10 @@ class MoviesViewModel @Inject constructor(
 
     private val _isUserLoggedOut = mutableStateOf(false)
     val isUserLoggedOut: State<Boolean> = _isUserLoggedOut
-
-   // private val _isSearchStringEmpty = mutableStateOf(false)
-   // val isSearchStringEmpty : State<Boolean> = _isSearchStringEmpty
-
+    
+    // Track content type (movie, series, or null for both)
+    private val _contentType = MutableStateFlow<String?>(null)
+    val contentType: StateFlow<String?> = _contentType
 
     //If user decide to search new movie then previous jop ("Searching for movies") will be stopped
     private var job : Job? = null
@@ -42,6 +44,13 @@ class MoviesViewModel @Inject constructor(
 
     //When viewModel launch then default search string "Spider man" will be searched
     init{
+        getMovies(_state.value.search)
+    }
+    
+    // Set content type from bottom nav selection
+    fun setContentType(type: String?) {
+        _contentType.value = type
+        // Refresh search with new content type
         getMovies(_state.value.search)
     }
 
@@ -56,7 +65,7 @@ class MoviesViewModel @Inject constructor(
             endReached = false
         )
 
-        job = getMovieUseCase.executeGetMovieRepository(search, 1).onEach {
+        job = getMovieUseCase.executeGetMovieRepository(search, 1, _contentType.value).onEach {
             when(it){
                 is Resource.Error -> {
                     _state.value = _state.value.copy(
@@ -99,7 +108,7 @@ class MoviesViewModel @Inject constructor(
             isLoadingMore = true
         )
 
-        loadMoreJob = getMovieUseCase.loadMoreMovies(_state.value.search, nextPage).onEach { result ->
+        loadMoreJob = getMovieUseCase.loadMoreMovies(_state.value.search, nextPage, _contentType.value).onEach { result ->
             when(result) {
                 is Resource.Error -> {
                     _state.value = _state.value.copy(
@@ -166,7 +175,5 @@ class MoviesViewModel @Inject constructor(
             }
         }
     }
-
-
 }
 

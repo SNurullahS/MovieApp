@@ -1,5 +1,6 @@
 package com.nurullahsevinckan.movieapp.presentation.ui.composes
 
+import android.util.Log
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
@@ -23,11 +24,16 @@ import androidx.compose.ui.unit.dp
 @Composable
 fun MovieSearchBar(
     modifier: Modifier = Modifier,
-    hint: String? = "",
+    hint: String = "Search...",
     onSearch: (String) -> Unit = {}
 ) {
     var text by remember { mutableStateOf("") }
-    var isHintDisplayed by remember { mutableStateOf(hint != "") }
+    var isHintDisplayed by remember { mutableStateOf(true) }
+    
+    // Log whenever hint changes
+    LaunchedEffect(hint) {
+        Log.d("MovieSearchBar", "Hint changed to: $hint")
+    }
 
     TextField(
         value = text,
@@ -44,7 +50,7 @@ fun MovieSearchBar(
         placeholder = {
             if (isHintDisplayed) {
                 Text(
-                    text = hint ?: "",
+                    text = hint,
                     color = Color.Gray
                 )
             }

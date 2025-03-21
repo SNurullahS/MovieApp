@@ -1,5 +1,6 @@
 package com.nurullahsevinckan.movieapp.presentation.movies.views
 
+import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -33,15 +34,31 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
 import com.nurullahsevinckan.movieapp.presentation.ui.composes.MovieScreenUpButton
+import com.nurullahsevinckan.movieapp.presentation.navigation.BottomNavViewModel
 
 @Composable
 fun MovieScreen(
     navController: NavController,
-    viewModel: MoviesViewModel = hiltViewModel()
+    viewModel: MoviesViewModel = hiltViewModel(),
+    bottomNavViewModel: BottomNavViewModel = hiltViewModel()
 ) {
     val state = viewModel.state.value
     val isLogout by viewModel.isUserLoggedOut
     val listState = rememberLazyListState()
+    
+    // Get the search hint and content type from BottomNavViewModel
+    val searchHint by bottomNavViewModel.searchHint.collectAsState()
+    val contentType by bottomNavViewModel.selectedContentType.collectAsState()
+    
+    // Debug logs to track changes
+    LaunchedEffect(contentType) {
+        Log.d("MovieScreen", "Content type changed to: $contentType")
+        viewModel.setContentType(contentType)
+    }
+    
+    LaunchedEffect(searchHint) {
+        Log.d("MovieScreen", "Search hint changed to: $searchHint")
+    }
 
     // Show scroll to top button only when not at the top
     val showScrollToTop by remember {
@@ -98,7 +115,7 @@ fun MovieScreen(
                 MovieSearchBar(
                     modifier = Modifier
                         .weight(1f),
-                    hint = "Search...",
+                    hint = searchHint,
                     onSearch = {
                         if (it.isNotEmpty()){viewModel.onEvent(MoviesEvent.Search(it))}
                         else{Toast.makeText(context, emptySearchStringMessage, Toast.LENGTH_SHORT).show()}

@@ -8,7 +8,7 @@ import javax.inject.Inject
 
 class MovieRepositoryImpl @Inject constructor(private val api : MovieAPI) : MovieRepository{
     override suspend fun getMovies(search: String, page: Int, type : String?): MovieDto {
-        return api.getMovies(searchString = search, page = page)
+        return api.getMovies(searchString = search, page = page, type = type)
     }
 
     override suspend fun getMovieDetail(imdbId: String): MovieDetailsDto {

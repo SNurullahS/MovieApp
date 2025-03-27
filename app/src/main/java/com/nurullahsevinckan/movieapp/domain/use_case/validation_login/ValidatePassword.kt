@@ -2,8 +2,9 @@ package com.nurullahsevinckan.movieapp.domain.use_case.validation_login
 
 import android.util.Patterns
 import com.nurullahsevinckan.movieapp.util.Constants.MIN_PASSWORD_LENGTH
+import javax.inject.Inject
 
-class ValidatePassword {
+class ValidatePassword @Inject constructor(){
 
     fun executePasswordValidation(password: String): ValidationResult {
         if (password.length < MIN_PASSWORD_LENGTH) return ValidationResult(

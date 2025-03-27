@@ -1,4 +1,4 @@
-package com.nurullahsevinckan.movieapp.presentation.validation
+package com.nurullahsevinckan.movieapp.presentation.login
 
 data class RegistrationFromState(
     val email : String = "",

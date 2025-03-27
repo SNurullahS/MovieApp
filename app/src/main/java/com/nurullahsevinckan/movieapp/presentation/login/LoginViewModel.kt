@@ -4,10 +4,15 @@ import android.util.Patterns
 import android.widget.Toast
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.State
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.setValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.nurullahsevinckan.movieapp.domain.repository.AuthenticationRepository
+import com.nurullahsevinckan.movieapp.domain.use_case.validation_login.ValidateEmail
+import com.nurullahsevinckan.movieapp.domain.use_case.validation_login.ValidatePassword
+import com.nurullahsevinckan.movieapp.domain.use_case.validation_login.ValidateRepeatedPassword
 import com.nurullahsevinckan.movieapp.util.Constants.USER_UID
 import com.nurullahsevinckan.movieapp.util.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -19,11 +24,18 @@ import javax.inject.Inject
 
 @HiltViewModel
 class LoginViewModel @Inject constructor(
-    private val auth : AuthenticationRepository
+    private val auth : AuthenticationRepository,
+    private val validateEmail: ValidateEmail = ValidateEmail(),
+    private val validatePassword: ValidatePassword = ValidatePassword(),
+    private val validateRepeatedPassword: ValidateRepeatedPassword  = ValidateRepeatedPassword()
 ):ViewModel() {
 
     private val _state = mutableStateOf(LoginState())
     val state : MutableState<LoginState> = _state
+
+    private val _validationState = mutableStateOf(RegistrationFromState())
+    val validationState : MutableState<RegistrationFromState> = _validationState
+
 
     private val _isUserLoggedIn = mutableStateOf(false)
     val isUserLoggedIn: State<Boolean> = _isUserLoggedIn
@@ -111,44 +123,6 @@ class LoginViewModel @Inject constructor(
             }
         }
     }
-
-   //private fun signOut(){
-   //    viewModelScope.launch {
-   //        auth.signOut().collect {
-   //            when(it){
-   //                is Resource.Error -> {
-   //                    _state.value = LoginState(error = it.message)
-   //                }
-   //                is Resource.Loading -> {
-   //                    _state.value = LoginState(isLoading = true)
-   //                }
-   //                is Resource.Success -> {
-   //                    _state.value = LoginState(user = null)
-   //                    println("signOut work!")
-   //                    _isUserLoggedIn.value = false
-   //                }
-   //            }
-   //        }
-   //    }
-   //}
-
-   // private fun userVerified() {
-   //     viewModelScope.launch {
-   //         auth.isEmailVerified().onEach {
-   //             when(it){
-   //                 is Resource.Error -> {
-   //                     _state.value = LoginState(error = it.message)
-   //                 }
-   //                 is Resource.Loading -> {
-   //                     _state.value = LoginState(isLoading = true)
-   //                 }
-   //                 is Resource.Success -> {
-   //                     _state.value = LoginState(isUserVerified = it.data ?: false)
-   //                 }
-   //             }
-   //         }
-   //     }
-   // }
     private fun isValidEmail(email: String): Boolean {
         return email.isNotEmpty() && Patterns.EMAIL_ADDRESS.matcher(email).matches()
     }
@@ -179,6 +153,9 @@ class LoginViewModel @Inject constructor(
                     _toastMessage.value = "Invalid email or password!"
                 }
             }
+            is LoginEvents.EmailChecked -> TODO()
+            is LoginEvents.PasswordChanged -> TODO()
+            is LoginEvents.RepeatedPasswordChanged -> TODO()
         }
     }
 

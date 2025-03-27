@@ -1,5 +1,6 @@
 package com.nurullahsevinckan.movieapp.presentation.login.views
 
+import android.app.ProgressDialog.show
 import android.widget.Toast
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.Text
@@ -20,6 +21,8 @@ import androidx.navigation.NavController
 import com.nurullahsevinckan.movieapp.presentation.Screen
 import com.nurullahsevinckan.movieapp.presentation.login.LoginEvents
 import com.nurullahsevinckan.movieapp.presentation.login.LoginViewModel
+import com.nurullahsevinckan.movieapp.presentation.login.RegistrationFromState
+import com.nurullahsevinckan.movieapp.presentation.login.ValidationEvent
 import com.nurullahsevinckan.movieapp.presentation.ui.composes.CustomButton
 
 @Composable
@@ -32,6 +35,22 @@ fun LoginScreen(
     val isUserLoggedIn by loginViewModel.isUserLoggedIn
     val toastMessage by loginViewModel.toastMessage
     val context = LocalContext.current
+
+
+    LaunchedEffect(key1 = context) {
+        loginViewModel.validationEvent.collect { event ->
+            when (event) {
+                ValidationEvent.Successful -> {
+                    Toast.makeText(
+                        context,
+                        "Registration successful",
+                        Toast.LENGTH_LONG
+                    )
+                        .show()
+                }
+            }
+        }
+    }
 
 
     LaunchedEffect(isUserLoggedIn) {
@@ -51,15 +70,20 @@ fun LoginScreen(
 
 
     Column(
-        modifier = Modifier.fillMaxSize().padding(16.dp).imePadding(),
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(16.dp)
+            .imePadding(),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally,
 
-    ) {
+        ) {
         Image(
             painter = painterResource(id = android.R.drawable.ic_lock_idle_lock),
             contentDescription = "Login Icon",
-            modifier = Modifier.size(100.dp).padding(bottom = 16.dp)
+            modifier = Modifier
+                .size(100.dp)
+                .padding(bottom = 16.dp)
         )
 
         Text(
@@ -70,17 +94,27 @@ fun LoginScreen(
         )
 
         // Pass the state and state updater function
-        CustomTextField(label = "Email", text = email, onTextChange = { email = it })
-        CustomTextField(label = "Password", text = password, isPassword = true, onTextChange = { password = it })
+        CustomTextField(
+            label = "Email",
+            text = email,
+            onTextChange = {
+               // loginViewModel.onEvent(LoginEvents.EmailChecked(it))
+                email = it
+            })
+        CustomTextField(
+            label = "Password",
+            text = password,
+            isPassword = true,
+            onTextChange = { password = it })
 
         CustomButton(text = "Login") {
-            loginViewModel.onEvent(LoginEvents.Login(email,password))
+            loginViewModel.onEvent(LoginEvents.Login(email, password))
             println("login buttonuna basıldı")
         }
 
         CustomButton(text = "Sign Up") {
 
-            loginViewModel.onEvent(LoginEvents.SignIn(email,password))
+            loginViewModel.onEvent(LoginEvents.SignIn(email, password))
             println("sign up buttonuna basıldı")
         }
     }

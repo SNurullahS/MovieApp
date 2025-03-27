@@ -16,25 +16,25 @@ import com.nurullahsevinckan.movieapp.domain.use_case.validation_login.ValidateR
 import com.nurullahsevinckan.movieapp.util.Constants.USER_UID
 import com.nurullahsevinckan.movieapp.util.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 
-
 @HiltViewModel
 class LoginViewModel @Inject constructor(
-    private val auth : AuthenticationRepository,
+    private val auth: AuthenticationRepository,
     private val validateEmail: ValidateEmail = ValidateEmail(),
     private val validatePassword: ValidatePassword = ValidatePassword(),
-    private val validateRepeatedPassword: ValidateRepeatedPassword  = ValidateRepeatedPassword()
-):ViewModel() {
+    private val validateRepeatedPassword: ValidateRepeatedPassword = ValidateRepeatedPassword()
+) : ViewModel() {
 
     private val _state = mutableStateOf(LoginState())
-    val state : MutableState<LoginState> = _state
+    val state: MutableState<LoginState> = _state
 
-    private val _validationState = mutableStateOf(RegistrationFromState())
-    val validationState : MutableState<RegistrationFromState> = _validationState
+    var validationState by mutableStateOf(RegistrationFromState())
 
 
     private val _isUserLoggedIn = mutableStateOf(false)
@@ -43,6 +43,8 @@ class LoginViewModel @Inject constructor(
     private val _toastMessage = mutableStateOf<String?>(null)
     val toastMessage: State<String?> = _toastMessage
 
+    private val validationEventChannel = Channel<ValidationEvent>()
+    val validationEvent = validationEventChannel.receiveAsFlow()
 
     init {
         getUserUid()
@@ -56,18 +58,20 @@ class LoginViewModel @Inject constructor(
     }
 
 
-    private fun getUserUid(){
+    private fun getUserUid() {
         viewModelScope.launch {
-            auth.currentUserUid().collect{
+            auth.currentUserUid().collect {
                 when (it) {
                     is Resource.Error -> {
                         _state.value = LoginState(error = it.message)
                         println("uid error")
                     }
+
                     is Resource.Loading -> {
                         _state.value = LoginState(isLoading = true)
                         println("uid loading!")
                     }
+
                     is Resource.Success -> {
                         _state.value = LoginState(userUid = it.data)
                         println("uid success")
@@ -76,6 +80,7 @@ class LoginViewModel @Inject constructor(
             }
         }
     }
+
     private fun logIn(email: String, password: String) {
         viewModelScope.launch {
             auth.loginUser(email, password).collect {
@@ -84,10 +89,12 @@ class LoginViewModel @Inject constructor(
                         _state.value = LoginState(error = it.message)
                         println("login error $email")
                     }
+
                     is Resource.Loading -> {
                         _state.value = LoginState(isLoading = true)
                         println("login loading $email")
                     }
+
                     is Resource.Success -> {
                         _state.value = LoginState(user = it.data)
                         println("login success $email")
@@ -101,18 +108,20 @@ class LoginViewModel @Inject constructor(
     }
 
 
-    private fun register(email :String,password: String){
+    private fun register(email: String, password: String) {
         viewModelScope.launch {
-            auth.registerUser(email,password).collect {
-                when(it){
+            auth.registerUser(email, password).collect {
+                when (it) {
                     is Resource.Error -> {
                         _state.value = LoginState(error = it.message)
                         println("register error${email}")
                     }
+
                     is Resource.Loading -> {
                         _state.value = LoginState(isLoading = true)
                         println("register loading${email}")
                     }
+
                     is Resource.Success -> {
                         _state.value = LoginState(user = it.data)
                         println("register successful ${email}")
@@ -123,6 +132,7 @@ class LoginViewModel @Inject constructor(
             }
         }
     }
+
     private fun isValidEmail(email: String): Boolean {
         return email.isNotEmpty() && Patterns.EMAIL_ADDRESS.matcher(email).matches()
     }
@@ -140,12 +150,38 @@ class LoginViewModel @Inject constructor(
         _toastMessage.value = null
     }
 
-    fun onEvent(event : LoginEvents){
-        when(event) {
-            is LoginEvents.Login ->{
-               logIn(event.email,event.password)
-               // println(_state.value)
+    private fun submitData(){
+        val emailResult = validateEmail.executeEmailValidation(validationState.email)
+        val passwordResult = validatePassword.executePasswordValidation(validationState.password)
+        val repeatedPassword = validateRepeatedPassword.executeRepeatedPasswordValidation(validationState.password,validationState.repeatPassword)
+
+        val hasError = listOf(
+            emailResult,
+            passwordResult,
+            repeatedPassword
+        ).any{!it.successful}
+
+        if(hasError) {
+            validationState = validationState.copy(
+                emailError = emailResult.errorMessage,
+                passwordError = passwordResult.errorMessage,
+                repeatPasswordError = repeatedPassword.errorMessage
+            )
+            return
+        }
+        viewModelScope.launch {
+        validationEventChannel.send(ValidationEvent.Successful)
+        }
+
+    }
+
+    fun onEvent(event: LoginEvents) {
+        when (event) {
+            is LoginEvents.Login -> {
+                logIn(event.email, event.password)
+                // println(_state.value)
             }
+
             is LoginEvents.SignIn -> {
                 if (validateCredentials(event.email, event.password)) {
                     register(event.email, event.password)
@@ -153,9 +189,17 @@ class LoginViewModel @Inject constructor(
                     _toastMessage.value = "Invalid email or password!"
                 }
             }
-            is LoginEvents.EmailChecked -> TODO()
-            is LoginEvents.PasswordChanged -> TODO()
-            is LoginEvents.RepeatedPasswordChanged -> TODO()
+
+            is LoginEvents.EmailChecked -> {
+                validationState = validationState.copy(email = event.email)
+            }
+
+            is LoginEvents.PasswordChanged -> {
+                validationState = validationState.copy(password = event.password)
+            }
+            is LoginEvents.RepeatedPasswordChanged ->{
+                validationState = validationState.copy(repeatPassword = event.repeatedPassword)
+            }
         }
     }
 

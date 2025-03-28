@@ -9,7 +9,7 @@ class ValidatePassword @Inject constructor(){
     fun executePasswordValidation(password: String): ValidationResult {
         if (password.length < MIN_PASSWORD_LENGTH) return ValidationResult(
             successful = false,
-            errorMessage = "The password needs to consist at  least $MIN_PASSWORD_LENGTH characters"
+            errorMessage = "The password needs to consist at least $MIN_PASSWORD_LENGTH characters"
         )
         val isPasswordContainsRequirements = with(password) {
             any { it.isDigit() } &&
@@ -19,7 +19,7 @@ class ValidatePassword @Inject constructor(){
         }
         if (!isPasswordContainsRequirements) return ValidationResult(
             successful = false,
-            errorMessage = "The password needs to contain at least one letter, uppercase, lowercase, number and special character"
+            errorMessage = "Password needs to contain numbers,digits,special characters "
         )
         return ValidationResult(successful = true)
     }

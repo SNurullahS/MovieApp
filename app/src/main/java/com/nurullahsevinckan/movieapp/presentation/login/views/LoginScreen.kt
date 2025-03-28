@@ -11,11 +11,14 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.excludeFromSystemGesture
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.LocalContentColor
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.*
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.nurullahsevinckan.movieapp.presentation.Screen
@@ -24,6 +27,7 @@ import com.nurullahsevinckan.movieapp.presentation.login.LoginViewModel
 import com.nurullahsevinckan.movieapp.presentation.login.RegistrationFromState
 import com.nurullahsevinckan.movieapp.presentation.login.ValidationEvent
 import com.nurullahsevinckan.movieapp.presentation.ui.composes.CustomButton
+import kotlin.math.log
 
 @Composable
 fun LoginScreen(
@@ -35,6 +39,7 @@ fun LoginScreen(
     val isUserLoggedIn by loginViewModel.isUserLoggedIn
     val toastMessage by loginViewModel.toastMessage
     val context = LocalContext.current
+    val validation = loginViewModel.validationState
 
 
     LaunchedEffect(key1 = context) {
@@ -98,14 +103,45 @@ fun LoginScreen(
             label = "Email",
             text = email,
             onTextChange = {
-               // loginViewModel.onEvent(LoginEvents.EmailChecked(it))
+                loginViewModel.onEvent(LoginEvents.EmailChecked(it))
                 email = it
-            })
+            },
+            isError = validation.emailError != null,
+            placeHolder = "Email",
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
+            companionError = validation.emailError != null ,
+            companionErrorMessage = validation.emailError
+        )
+
         CustomTextField(
             label = "Password",
             text = password,
             isPassword = true,
-            onTextChange = { password = it })
+            onTextChange = {
+                loginViewModel.onEvent(LoginEvents.PasswordChanged(it))
+                password = it
+            },
+            isError = validation.passwordError != null,
+            placeHolder = "password",
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
+            companionError = validation.passwordError != null,
+            companionErrorMessage = validation.passwordError
+        )
+
+
+        CustomTextField(
+            label = "RepeatedPassword",
+            text = validation.repeatPassword,
+            isPassword = true,
+            onTextChange = {
+                loginViewModel.onEvent(LoginEvents.RepeatedPasswordChanged(it))
+            },
+            isError = validation.repeatPasswordError != null,
+            placeHolder = "Repeat Password",
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
+            companionError = validation.repeatPasswordError != null,
+            companionErrorMessage = validation.repeatPasswordError
+        )
 
         CustomButton(text = "Login") {
             loginViewModel.onEvent(LoginEvents.Login(email, password))
@@ -113,7 +149,6 @@ fun LoginScreen(
         }
 
         CustomButton(text = "Sign Up") {
-
             loginViewModel.onEvent(LoginEvents.SignIn(email, password))
             println("sign up buttonuna basıldı")
         }

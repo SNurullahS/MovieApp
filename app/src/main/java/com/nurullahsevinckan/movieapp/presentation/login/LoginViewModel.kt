@@ -183,6 +183,7 @@ class LoginViewModel @Inject constructor(
             }
 
             is LoginEvents.SignIn -> {
+                submitData()
                 if (validateCredentials(event.email, event.password)) {
                     register(event.email, event.password)
                 } else {

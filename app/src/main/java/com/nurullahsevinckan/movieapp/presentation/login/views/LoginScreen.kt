@@ -36,6 +36,7 @@ fun LoginScreen(
 ) {
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
+    var isLoginUiVisible by remember { mutableStateOf(true) }
     val isUserLoggedIn by loginViewModel.isUserLoggedIn
     val toastMessage by loginViewModel.toastMessage
     val context = LocalContext.current
@@ -73,6 +74,14 @@ fun LoginScreen(
         }
     }
 
+    LaunchedEffect(validation) {
+        if (validation.passwordError?.isNotEmpty() == true || validation.emailError?.isNotEmpty() == true || validation.repeatPasswordError?.isNotEmpty() == true) {
+            isLoginUiVisible = false
+        } else {
+            isLoginUiVisible = true
+        }
+    }
+
 
     Column(
         modifier = Modifier
@@ -83,20 +92,23 @@ fun LoginScreen(
         horizontalAlignment = Alignment.CenterHorizontally,
 
         ) {
-        Image(
-            painter = painterResource(id = android.R.drawable.ic_lock_idle_lock),
-            contentDescription = "Login Icon",
-            modifier = Modifier
-                .size(100.dp)
-                .padding(bottom = 16.dp)
-        )
+        if (isLoginUiVisible) {
+            Image(
+                painter = painterResource(id = android.R.drawable.ic_lock_idle_lock),
+                contentDescription = "Login Icon",
+                modifier = Modifier
+                    .size(100.dp)
+                    .padding(bottom = 16.dp)
+            )
 
-        Text(
-            text = "Login",
-            fontSize = 32.sp,
-            fontWeight = FontWeight.Bold,
-            modifier = Modifier.padding(bottom = 16.dp)
-        )
+
+            Text(
+                text = "Login",
+                fontSize = 32.sp,
+                fontWeight = FontWeight.Bold,
+                modifier = Modifier.padding(bottom = 16.dp)
+            )
+        }
 
         // Pass the state and state updater function
         CustomTextField(
@@ -109,7 +121,7 @@ fun LoginScreen(
             isError = validation.emailError != null,
             placeHolder = "Email",
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
-            companionError = validation.emailError != null ,
+            companionError = validation.emailError != null,
             companionErrorMessage = validation.emailError
         )
 

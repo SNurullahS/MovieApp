@@ -14,8 +14,7 @@ class ValidatePassword @Inject constructor(){
         val isPasswordContainsRequirements = with(password) {
             any { it.isDigit() } &&
                     any { it.isLowerCase() } &&
-                    any { it.isUpperCase() } &&
-                    any { it.isLetter() }
+                    any { it.isUpperCase() }
         }
         if (!isPasswordContainsRequirements) return ValidationResult(
             successful = false,

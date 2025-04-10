@@ -5,6 +5,10 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Lock
+import androidx.compose.material.icons.filled.Person
+import androidx.compose.material3.Icon
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -43,6 +47,11 @@ fun CustomTextField(
             maxLines = 1,
             isError = isError ?: false,
             keyboardOptions = keyboardOptions ?: KeyboardOptions(keyboardType = KeyboardType.Text),
+            leadingIcon = {
+                Icon(
+                    if(label == "Email")Icons.Filled.Person else Icons.Filled.Lock,
+                    contentDescription ="User Name Space")
+            },
             placeholder = { Text(text = placeHolder ?: "") }
         )
 
